@@ -136,6 +136,10 @@
   }
 !endif
 
+!if $(EDK2_ENABLE_GHES_MM) == TRUE
+  ArmPlatformPkg/Drivers/HestMmErrorSources/HestErrorSourceStandaloneMm.inf
+!endif
+
 ###################################################################################################
 #
 # BuildOptions Section - Define the module specific tool chain flags that should be used as

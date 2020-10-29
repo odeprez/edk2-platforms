@@ -181,6 +181,12 @@ READ_LOCK_STATUS   = TRUE
   # MM Communicate
   INF ArmPkg/Drivers/MmCommunicationDxe/MmCommunication.inf
 
+  # Hest Error Source Support
+  INF MdeModulePkg/Universal/Apei/HestDxe/HestDxe.inf
+!if $(EDK2_ENABLE_GHES_MM) == TRUE
+  INF ArmPlatformPkg/Drivers/HestMmErrorSources/HestErrorSourceDxe.inf
+!endif
+
   #
   # Platform driver
   #

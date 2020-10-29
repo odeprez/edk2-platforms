@@ -22,6 +22,9 @@
   DEFINE LPI_EN                             = FALSE
   DEFINE CPPC_EN                            = FALSE
 
+  # To allow firmware first error handling, set this to TRUE.
+  DEFINE EDK2_ENABLE_GHES_MM                = FALSE
+
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
 
@@ -369,4 +372,12 @@
   }
 !else
   ArmPkg/Drivers/MmCommunicationDxe/MmCommunication.inf
+!endif
+
+  #
+  # GHESv2 HEST error sources support
+  #
+  MdeModulePkg/Universal/Apei/HestDxe/HestDxe.inf
+!if $(EDK2_ENABLE_GHES_MM) == TRUE
+  ArmPlatformPkg/Drivers/HestMmErrorSources/HestErrorSourceDxe.inf
 !endif
