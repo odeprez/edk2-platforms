@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2018, ARM Limited. All rights reserved.
+#  Copyright (c) 2018 - 2021, ARM Limited. All rights reserved.
 #
 #  SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -50,6 +50,9 @@ READ_LOCK_STATUS   = TRUE
 
 !if $(EDK2_ENABLE_GHES_MM) == TRUE
   INF ArmPlatformPkg/Drivers/HestMmErrorSources/HestErrorSourceStandaloneMm.inf
+!endif
+!if $(EDK2_ENABLE_CPU_MM) == TRUE
+  INF Platform/ARM/Drivers/CpuMm/CpuMm.inf
 !endif
   INF StandaloneMmPkg/Core/StandaloneMmCore.inf
 !if $(SECURE_STORAGE_ENABLE) == TRUE

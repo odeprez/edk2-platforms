@@ -1,0 +1,28 @@
+## @file
+#  Cpu MM driver specific declarations.
+#
+#  This file defines Guids and declares Pcd values for Cpu MM driver.
+#
+#  Copyright (c) 2021 - 2022, ARM Limited. All rights reserved.
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  DEC_SPECIFICATION              = 0x0001001B
+  PACKAGE_NAME                   = CpuMm
+  PACKAGE_GUID                   = b6b5e2a0-ca32-4881-90ee-cbdbcf349b3e
+  PACKAGE_VERSION                = 0.1
+
+[Guids]
+  gCpuMmTokenSpaceGuid = {0x8162f48a, 0x05d0, 0x4d34, { 0x8d, 0x1b, 0x05, 0x53, 0xd6, 0x30, 0x3c, 0x87 }}
+  # Cpu Event handler Guid
+  gArmCpuEventHandlerGuid = { 0x2c1b3bfc, 0x42cd, 0x4a66, { 0xac, 0xd1, 0xa4, 0xd1, 0x63, 0xe9, 0x90, 0xf6 }}
+
+[PcdsFixedAtBuild.common]
+  gCpuMmTokenSpaceGuid.PcdCpuErrorDataBase|0|UINT64|0x00000001
+  gCpuMmTokenSpaceGuid.PcdCpuErrorDataSize|0|UINT64|0x00000002
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSdeiEventBase|0|UINT32|0x00000003
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceCount|1|UINT32|0x00000004
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceId|0|UINT16|0x00000005

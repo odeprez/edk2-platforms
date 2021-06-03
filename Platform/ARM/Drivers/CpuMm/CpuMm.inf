@@ -1,0 +1,52 @@
+## @file
+#  StandaloneMM driver for the CPU.
+#
+#  Driver to handle CE and DE error events that occur on CPU.
+#
+#  Copyright (c) 2021 - 2022, ARM Limited. All rights reserved.
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001B
+  BASE_NAME                      = StandaloneMmCpuDriver
+  FILE_GUID                      = 3F6D82CA-0CAC-4405-8B59-7587BE8334D1
+  MODULE_TYPE                    = MM_STANDALONE
+  VERSION_STRING                 = 1.0
+  PI_SPECIFICATION_VERSION       = 0x00010032
+  ENTRY_POINT                    = CpuMmDriverInitialize
+
+[Sources]
+  CpuMm.c
+  CpuMmErrorSourceInfo.c
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  Platform/ARM/Drivers/CpuMm/CpuMm.dec
+  MdePkg/MdePkg.dec
+
+[LibraryClasses]
+  ArmSvcLib
+  ArmLib
+  BaseMemoryLib
+  DebugLib
+  StandaloneMmDriverEntryPoint
+
+[Protocols]
+  gMmHestErrorSourceDescProtocolGuid      ##PRODUCES
+
+[FixedPcd]
+  gCpuMmTokenSpaceGuid.PcdCpuErrorDataBase
+  gCpuMmTokenSpaceGuid.PcdCpuErrorDataSize
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSdeiEventBase
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceId
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceCount
+
+[Guids]
+  gArmCpuEventHandlerGuid
+
+[Depex]
+  TRUE

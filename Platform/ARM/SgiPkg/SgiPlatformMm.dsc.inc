@@ -11,6 +11,10 @@
 # Library Class section - list of all Library Classes needed by this Platform.
 #
 ################################################################################
+[Defines]
+  # To enable Cpu Mm driver, set this to TRUE.
+  DEFINE EDK2_ENABLE_CPU_MM                = FALSE
+
 [LibraryClasses]
   #
   # Basic
@@ -96,6 +100,15 @@
   gEfiSecurityPkgTokenSpaceGuid.PcdUserPhysicalPresence|TRUE
 !endif
 
+!if $(EDK2_ENABLE_CPU_MM) == TRUE
+  ## CPU
+  gCpuMmTokenSpaceGuid.PcdCpuErrorDataBase|0xFF621000
+  gCpuMmTokenSpaceGuid.PcdCpuErrorDataSize|0x400
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSdeiEventBase|805
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceCount|1
+  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceId|10
+!endif
+
 ###################################################################################################
 #
 # Components Section - list of the modules and components that will be processed by compilation
@@ -138,6 +151,9 @@
 
 !if $(EDK2_ENABLE_GHES_MM) == TRUE
   ArmPlatformPkg/Drivers/HestMmErrorSources/HestErrorSourceStandaloneMm.inf
+!endif
+!if $(EDK2_ENABLE_CPU_MM) == TRUE
+  Platform/ARM/Drivers/CpuMm/CpuMm.inf
 !endif
 
 ###################################################################################################
