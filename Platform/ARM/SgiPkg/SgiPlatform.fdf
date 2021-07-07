@@ -194,6 +194,11 @@ READ_LOCK_STATUS   = TRUE
   INF Platform/ARM/SgiPkg/Library/PcieAcpiTableGeneratorLib/PcieAcpiTableGeneratorLib.inf
 
   #
+  # Platform error handler driver
+  #
+  INF Platform/ARM/SgiPkg/Drivers/PlatformErrorHandlerDxe/PlatformErrorHandlerDxe.inf
+
+  #
   # Bds
   #
   INF MdeModulePkg/Universal/BootManagerPolicyDxe/BootManagerPolicyDxe.inf

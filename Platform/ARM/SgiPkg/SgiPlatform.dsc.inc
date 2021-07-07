@@ -318,6 +318,11 @@
   Platform/ARM/SgiPkg/Library/PcieAcpiTableGeneratorLib/PcieAcpiTableGeneratorLib.inf
 
   #
+  # Platform error handler driver
+  #
+  Platform/ARM/SgiPkg/Drivers/PlatformErrorHandlerDxe/PlatformErrorHandlerDxe.inf
+
+  #
   # FAT filesystem + GPT/MBR partitioning
   #
   MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
