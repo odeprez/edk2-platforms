@@ -71,6 +71,12 @@
   gArmSgiTokenSpaceGuid.PcdMaxAddressBitsPerChip
   gArmSgiTokenSpaceGuid.PcdOscLpiEnable
   gArmSgiTokenSpaceGuid.PcdOscCppcEnable
+  gArmSgiTokenSpaceGuid.PcdSmmuBase
+  gArmSgiTokenSpaceGuid.PcdSmmuDevIDBase
+  gArmSgiTokenSpaceGuid.PcdSmmuEventGsiv
+  gArmSgiTokenSpaceGuid.PcdSmmuGErrorGsiv
+  gArmSgiTokenSpaceGuid.PcdSmmuPriGsiv
+  gArmSgiTokenSpaceGuid.PcdSmmuSyncGsiv
   gArmSgiTokenSpaceGuid.PcdSp804DualTimerBaseAddress
   gArmSgiTokenSpaceGuid.PcdSp804DualTimerSize
   gArmSgiTokenSpaceGuid.PcdSp804DualTimerInterrupt

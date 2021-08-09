@@ -18,7 +18,6 @@
   Dbg2.aslc
   Fadt.aslc
   Gtdt.aslc
-  Iort.aslc
   Mcfg.aslc
   RdN2/Dsdt.asl
   RdN2/Madt.aslc
