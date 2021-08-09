@@ -546,4 +546,117 @@ typedef struct {
     1               /* Processors */                                           \
   }
 
+// Helper macro for SMMUv3 ID remapping table
+#define EFI_ACPI_SMMUv3_ID_TABLE_INIT(BaseStreamId, NumIds, ItsNodeIdx)        \
+   {                                                                           \
+     BaseStreamId,                             /* InputBase */                 \
+     NumIds,                                   /* NumIds */                    \
+     BaseStreamId,                             /* OutputBase */                \
+     OFFSET_OF (ARM_EFI_ACPI_6_0_IO_REMAPPING_TABLE,                           \
+       ItsNode ##ItsNodeIdx),                  /* OutputReference */           \
+     0,                                        /* Flags */                     \
+   }
+
+// PCI Root Complex for SSDT
+#define EFI_ACPI_PCI_RC_INIT(PciIndex, SegNum, BusStart, BusEnd, BusLength,    \
+    MmiolStart, MmiolEnd, MmiolSize, MmiohStart, MmiohEnd, MmiohSize,          \
+    EcamStart, EcamEnd, EcamSize)                                              \
+    Device (PCI##PciIndex) {                                                   \
+      Name (_HID, EISAID("PNP0A08"))  /* PCI Express Root Bridge */            \
+      Name (_CID, EISAID("PNP0A03"))  /* Compatible PCI Root Bridge */         \
+      Name (_SEG, SegNum)             /* PCI Segment Group Number */           \
+      Name (_BBN, BusStart)           /* PCI Base Bus Number */                \
+      Name (_ADR, Zero)                                                        \
+      Name (_UID, PciIndex)           /* Unique ID */                          \
+      Name (_CCA, 1)                  /* Cache Coherency Attribute */          \
+                                                                               \
+      Method (_CRS, 0, Serialized) {                                           \
+        Name (RBUF, ResourceTemplate () {                                      \
+          WordBusNumber (                                                      \
+            ResourceProducer,                                                  \
+            MinFixed,                                                          \
+            MaxFixed,                                                          \
+            PosDecode,                                                         \
+            0,                                                                 \
+            BusStart,                                                          \
+            BusEnd,                                                            \
+            0,                                                                 \
+            BusLength                                                          \
+          )                                                                    \
+                                                                               \
+          DWordMemory (                                                        \
+            ResourceProducer,                                                  \
+            PosDecode,                                                         \
+            MinFixed,                                                          \
+            MaxFixed,                                                          \
+            Cacheable,                                                         \
+            ReadWrite,                                                         \
+            0x00000000,                                                        \
+            MmiolStart,                                                        \
+            MmiolEnd,                                                          \
+            0x00000000,                                                        \
+            MmiolSize                                                          \
+          )                                                                    \
+                                                                               \
+          QWordMemory (                                                        \
+            ResourceProducer,                                                  \
+            PosDecode,                                                         \
+            MinFixed,                                                          \
+            MaxFixed,                                                          \
+            Cacheable,                                                         \
+            ReadWrite,                                                         \
+            0x00000000,                                                        \
+            MmiohStart,                                                        \
+            MmiohEnd,                                                          \
+            0x00000000,                                                        \
+            MmiohSize                                                          \
+          )                                                                    \
+                                                                               \
+          DWordIo (                                                            \
+            ResourceProducer,                                                  \
+            MinFixed,                                                          \
+            MaxFixed,                                                          \
+            PosDecode,                                                         \
+            EntireRange,                                                       \
+            0x00000000,                                                        \
+            0x00000000,                                                        \
+            0x007FFFFF,                                                        \
+            0x77800000,                                                        \
+            0x00800000,                                                        \
+            ,                                                                  \
+            ,                                                                  \
+            ,                                                                  \
+            TypeTranslation                                                    \
+          )                                                                    \
+        })                                                                     \
+                                                                               \
+        Return (RBUF)                                                          \
+      } /* Method(_CRS) */                                                     \
+                                                                               \
+      Device (RES0)                                                            \
+      {                                                                        \
+        Name (_HID, "PNP0C02" /* PNP Motherboard Resources */)                 \
+        Name (_CRS, ResourceTemplate ()                                        \
+        {                                                                      \
+           QWordMemory (                                                       \
+             ResourceProducer,                                                 \
+             PosDecode,                                                        \
+             MinFixed,                                                         \
+             MaxFixed,                                                         \
+             NonCacheable,                                                     \
+             ReadWrite,                                                        \
+             0x0000000000000000,                                               \
+             EcamStart,                                                        \
+             EcamEnd,                                                          \
+             0x0000000000000000,                                               \
+             EcamSize,                                                         \
+             ,                                                                 \
+             ,                                                                 \
+             ,                                                                 \
+             AddressRangeMemory,                                               \
+             TypeStatic)                                                       \
+        })                                                                     \
+      }                                                                        \
+  }
+
 #endif /* __SGI_ACPI_HEADER__ */
