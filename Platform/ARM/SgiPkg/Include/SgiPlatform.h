@@ -66,11 +66,18 @@
 #define DRAM_BLOCK2_BASE_REMOTE(ChipId) \
           (SGI_REMOTE_CHIP_MEM_OFFSET (ChipId) + FixedPcdGet64 (PcdDramBlock2Base))
 
+// List of isolated CPUs MPID
+typedef struct {
+  UINT64  Count;                // Number of elements present in the list
+  UINT64  Mpid[];               // List containing isolated CPU MPIDs
+} SGI_ISOLATED_CPU_LIST;
+
 // ARM platform description data.
 typedef struct {
   UINTN  PlatformId;
   UINTN  ConfigId;
   UINTN  MultiChipMode;
+  SGI_ISOLATED_CPU_LIST  IsolatedCpuList;
 } SGI_PLATFORM_DESCRIPTOR;
 
 // Arm SGI/RD Product IDs

@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) 2018, ARM Limited. All rights reserved.
+*  Copyright (c) 2018-2022, ARM Limited. All rights reserved.
 *
 *  SPDX-License-Identifier: BSD-2-Clause-Patent
 *
@@ -38,6 +38,8 @@ GetSgiSystemId (
   CONST VOID                    *NtFwCfgDtBlob;
   SGI_NT_FW_CONFIG_INFO_PPI     *NtFwConfigInfoPpi;
   EFI_STATUS                    Status;
+  UINT64                        IsolatedCpuCount;
+  UINT64                        CoreCount;
 
   Status = PeiServicesLocatePpi (&gNtFwConfigDtInfoPpiGuid, 0, NULL,
              (VOID**)&NtFwConfigInfoPpi);
@@ -83,6 +85,32 @@ GetSgiSystemId (
     HobData->MultiChipMode = fdt32_to_cpu (*Property);
   }
 
+  Property = fdt_getprop (NtFwCfgDtBlob, Offset, "isolated-cpu-list", NULL);
+  if (Property == NULL) {
+    DEBUG ((DEBUG_INFO, "%s property not found\n", "isolated-cpu-list"));
+    HobData->IsolatedCpuList.Count = 0;
+  } else {
+    CopyMem (&IsolatedCpuCount, Property, sizeof (IsolatedCpuCount));
+    CoreCount =
+      FixedPcdGet32 (PcdChipCount) *
+      FixedPcdGet32 (PcdClusterCount) *
+      FixedPcdGet32 (PcdCoreCount);
+    if (IsolatedCpuCount > CoreCount) {
+      DEBUG ((
+            DEBUG_ERROR,
+            "IsolatedCpuCount(%u) is higher than CoreCount(%u)\n",
+            IsolatedCpuCount,
+            CoreCount
+            ));
+      return EFI_SUCCESS;
+    }
+    CopyMem (
+      &HobData->IsolatedCpuList,
+      Property,
+      sizeof(HobData->IsolatedCpuList) + (CoreCount * sizeof(UINT64))
+      );
+  }
+
   return EFI_SUCCESS;
 }
 
@@ -104,11 +132,24 @@ SgiPlatformPeim (
 {
   SGI_PLATFORM_DESCRIPTOR       *HobData;
   EFI_STATUS                    Status;
+  UINT64                        CoreCount;
+  UINTN                         HobSize;
 
+  CoreCount =
+    FixedPcdGet32 (PcdChipCount) *
+    FixedPcdGet32 (PcdClusterCount) *
+    FixedPcdGet32 (PcdCoreCount);
+
+  // Additional size for SGI_ISOLATED_CPU_LIST.
+  // Size = (MPID register size in bytes * CoreCount) +
+  //        sizeof(SGI_PLATFORM_DESCRIPTOR)
+  HobSize =
+    sizeof (SGI_PLATFORM_DESCRIPTOR) +
+    (CoreCount * sizeof(UINT64));
   // Create platform descriptor HOB
   HobData = (SGI_PLATFORM_DESCRIPTOR *)BuildGuidHob (
                                          &gArmSgiPlatformIdDescriptorGuid,
-                                         sizeof (SGI_PLATFORM_DESCRIPTOR));
+                                         HobSize);
 
   // Get the system id from the platform specific nt_fw_config device tree
   if (HobData == NULL) {
