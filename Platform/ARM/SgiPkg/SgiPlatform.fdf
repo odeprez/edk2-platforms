@@ -185,6 +185,7 @@ READ_LOCK_STATUS   = TRUE
   # Platform driver
   #
   INF Platform/ARM/SgiPkg/Drivers/PlatformDxe/PlatformDxe.inf
+  INF Platform/ARM/SgiPkg/Library/PcieAcpiTableGeneratorLib/PcieAcpiTableGeneratorLib.inf
 
   #
   # Bds

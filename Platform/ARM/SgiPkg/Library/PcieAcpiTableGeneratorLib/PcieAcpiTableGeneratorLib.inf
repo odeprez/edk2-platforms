@@ -1,0 +1,47 @@
+#
+#  Copyright (c) 2021, ARM Limited. All rights reserved.
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+
+[Defines]
+  INF_VERSION                    = 0x0001001A
+  BASE_NAME                      = PcieAcpiTableGeneratorLib
+  FILE_GUID                      = a7af4f75-8572-4294-ad55-382204450d17
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = PcieTableGeneratorEntryPoint
+
+[Sources.common]
+  PcieAcpiTableGeneratorLib.c
+  PcieSsdtTemplate.asl
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  DynamicTablesPkg/DynamicTablesPkg.dec
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  OvmfPkg/OvmfPkg.dec
+  Platform/ARM/SgiPkg/SgiPlatform.dec
+
+
+[LibraryClasses]
+  AmlLib
+  ArmPlatformLib
+  BaseLib
+  DebugLib
+  HobLib
+  MemoryAllocationLib
+  UefiDriverEntryPoint
+
+[Protocols]
+  gEfiAcpiTableProtocolGuid          ## CONSUMES
+
+[Guids]
+  gArmSgiPcieMmapTablesGuid
+
+
+[Depex]
+  gEfiAcpiTableProtocolGuid

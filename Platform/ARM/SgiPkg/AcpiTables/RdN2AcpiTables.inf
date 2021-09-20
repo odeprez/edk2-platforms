@@ -23,7 +23,6 @@
   RdN2/Madt.aslc
   RdN2/Pptt.aslc
   Spcr.aslc
-  Ssdt.asl
   SsdtEvents.asl
   SsdtIoVirtSocExp.asl
   SsdtRos.asl

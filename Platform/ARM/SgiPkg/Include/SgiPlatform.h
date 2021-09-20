@@ -74,6 +74,8 @@
 // PCI data layout
 *******************************************************************************/
 
+#define SGI_PCI_DEV_NAME_LEN  8U
+
 typedef struct {
   UINT64 Address;
   UINT64 Size;
@@ -101,6 +103,14 @@ typedef struct {
   UINT64 TableSize;
   SGI_PCIE_IO_BLOCK IoBlocks[];
 } SGI_PCIE_IO_BLOCK_LIST;
+
+typedef struct {
+  UINT8  Name[SGI_PCI_DEV_NAME_LEN];
+  UINT8  Index;
+  SGI_PCIE_DEVICE Device;
+  UINT64 Segment;
+  UINT64 Translation;
+} SGI_PCIE_CONFIG_TABLE;
 
 // List of isolated CPUs MPID
 typedef struct {

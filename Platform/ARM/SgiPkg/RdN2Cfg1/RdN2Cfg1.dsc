@@ -30,6 +30,7 @@
 
 # include common/basic libraries from MdePkg.
 !include MdePkg/MdeLibs.dsc.inc
+!include DynamicTablesPkg/DynamicTables.dsc.inc
 
 ################################################################################
 #

@@ -6,7 +6,7 @@
 #
 
 !include Platform/ARM/VExpressPkg/ArmVExpress.dsc.inc
-
+!include DynamicTablesPkg/DynamicTables.dsc.inc
 [Defines]
   # To allow the use of secure storage, set this to TRUE.
   DEFINE SECURE_STORAGE_ENABLE              = FALSE
@@ -305,6 +305,7 @@
   # platform driver
   #
   Platform/ARM/SgiPkg/Drivers/PlatformDxe/PlatformDxe.inf
+  Platform/ARM/SgiPkg/Library/PcieAcpiTableGeneratorLib/PcieAcpiTableGeneratorLib.inf
 
   #
   # FAT filesystem + GPT/MBR partitioning
