@@ -30,11 +30,14 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   ArmPkg/ArmPkg.dec
+  Platform/ARM/SgiPkg/SgiPlatform.dec
 
 [LibraryClasses]
+  ArmPlatformLib
   BaseLib
   DebugLib
   DevicePathLib
+  HobLib
   IoLib
   MemoryAllocationLib
   UefiBootServicesTableLib
@@ -52,6 +55,9 @@
 
 [Protocols]
   gEfiCpuIo2ProtocolGuid          ## CONSUMES
+
+[Guids]
+  gArmSgiPcieMmapTablesGuid
 
 [Depex]
   gEfiCpuIo2ProtocolGuid

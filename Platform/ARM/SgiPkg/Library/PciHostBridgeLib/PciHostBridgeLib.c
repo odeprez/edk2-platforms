@@ -8,18 +8,24 @@
 **/
 
 #include <PiDxe.h>
+#include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
 #include <Library/DevicePathLib.h>
+#include <Library/HobLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Library/PcdLib.h>
 #include <Library/PciHostBridgeLib.h>
 #include <Protocol/PciHostBridgeResourceAllocation.h>
 #include <Protocol/PciRootBridgeIo.h>
 
+#include <SgiPlatform.h>
+
 GLOBAL_REMOVE_IF_UNREFERENCED
 STATIC CHAR16 CONST * CONST mPciHostBridgeLibAcpiAddressSpaceTypeStr[] = {
   L"Mem", L"I/O", L"Bus"
 };
+
+STATIC BOOLEAN DynamicTableGenerationEnabled;
 
 #pragma pack(1)
 typedef struct {
@@ -89,6 +95,189 @@ STATIC PCI_ROOT_BRIDGE mPciRootBridge[] = {
   },
 };
 
+STATIC PCI_ROOT_BRIDGE mRootBridgeTemplate[] = {
+  {
+    0,                                              // Segment
+    0,                                              // Supports
+    0,                                              // Attributes
+    TRUE,                                           // DmaAbove4G
+    FALSE,                                          // NoExtendedConfigSpace
+    FALSE,                                          // ResourceAssigned
+    EFI_PCI_HOST_BRIDGE_COMBINE_MEM_PMEM |          // AllocationAttributes
+    EFI_PCI_HOST_BRIDGE_MEM64_DECODE,
+    {
+      // Bus
+      0,
+      0,
+    }, {
+      // Io
+      0,
+      0,
+      0,
+    }, {
+      // Mem
+      MAX_UINT64,
+      0,
+      0,
+    }, {
+      // MemAbove4G
+      MAX_UINT64,
+      0,
+      0,
+    }, {
+      // PMem
+      MAX_UINT64,
+      0
+    }, {
+      // PMemAbove4G
+      MAX_UINT64,
+      0,
+      0,
+    },
+    (EFI_DEVICE_PATH_PROTOCOL *)&mEfiPciRootBridgeDevicePath
+  }
+};
+
+STATIC
+UINT8
+GetPcieRootPortCount(
+    SGI_PCIE_IO_BLOCK_LIST *IoBlockList
+)
+{
+  SGI_PCIE_IO_BLOCK *IoBlock;
+  SGI_PCIE_DEVICE *RootPorts;
+  UINTN Count = 0;
+  UINTN LoopRootPort;
+  UINTN LoopIoBlock;
+
+  IoBlock = IoBlockList->IoBlocks;
+  for (LoopIoBlock = 0; LoopIoBlock < IoBlockList->BlockCount; LoopIoBlock++) {
+    // EDK2 Supports only one segment.
+    if (IoBlock->Segment == 0) {
+      RootPorts = IoBlock->RootPorts;
+      for (LoopRootPort = 0; LoopRootPort < IoBlock->Count; LoopRootPort++) {
+        if (RootPorts[LoopRootPort].Ecam.Size != 0) {
+          Count++;
+        }
+      }
+    }
+    IoBlock = (SGI_PCIE_IO_BLOCK *) ((UINT8 *)IoBlock +
+                sizeof (SGI_PCIE_IO_BLOCK) +
+                (sizeof (SGI_PCIE_DEVICE) * IoBlock->Count));
+  }
+
+  return Count;
+}
+
+STATIC
+EFI_STATUS
+GenerateRootBridge (
+    PCI_ROOT_BRIDGE                     *Bridge,
+    SGI_PCIE_DEVICE                     *RootPort,
+    UINT64                               Translation,
+    UINTN                                Segment
+    )
+{
+  EFI_PCI_ROOT_BRIDGE_DEVICE_PATH *DevicePath;
+  STATIC UINTN UID = 0;
+
+  CopyMem (Bridge, mRootBridgeTemplate, sizeof *Bridge);
+  Bridge->Segment = Segment;
+
+  if (RootPort->Bus.Size != 0) {
+    Bridge->Bus.Base = RootPort->Bus.Address;
+    Bridge->Bus.Limit = RootPort->Bus.Address + RootPort->Bus.Size - 1;
+  }
+
+  if (RootPort->MmioL.Size != 0) {
+    Bridge->Mem.Base = RootPort->MmioL.Address;
+    Bridge->Mem.Limit =
+      RootPort->MmioL.Address + RootPort->MmioL.Size - 1;
+    Bridge->Mem.Translation = Translation;
+  }
+
+  if (RootPort->MmioH.Size != 0) {
+    Bridge->MemAbove4G.Base = RootPort->MmioH.Address;
+    Bridge->MemAbove4G.Limit =
+      RootPort->MmioH.Address + RootPort->MmioH.Size - 1;
+  }
+
+  DevicePath = AllocateCopyPool(
+      sizeof mEfiPciRootBridgeDevicePath,
+      &mEfiPciRootBridgeDevicePath
+      );
+  if (DevicePath == NULL) {
+    DEBUG ((
+          DEBUG_ERROR,
+          "[%a:%d] - AllocatePool failed!\n",
+          __FUNCTION__,
+          __LINE__
+          ));
+    return EFI_OUT_OF_RESOURCES;
+  }
+
+  DevicePath->AcpiDevicePath.UID = UID++;
+  Bridge->DevicePath = (EFI_DEVICE_PATH_PROTOCOL *)DevicePath;
+  return EFI_SUCCESS;
+}
+
+PCI_ROOT_BRIDGE *
+EFIAPI
+PciGenerateHostBridgeInfo (
+  SGI_PCIE_IO_BLOCK_LIST *IoBlockList,
+  UINTN *Count
+  )
+{
+  EFI_STATUS Status;
+  SGI_PCIE_IO_BLOCK *IoBlock;
+  UINT8 Idx;
+  UINTN LoopRootPort;
+  UINTN LoopIoBlock;
+  PCI_ROOT_BRIDGE *Bridges;
+
+  *Count = GetPcieRootPortCount(IoBlockList);
+  if (*Count == 0) {
+    return NULL;
+  }
+
+  Bridges = AllocatePool (*Count * sizeof *Bridges);
+  if (Bridges == NULL) {
+     DEBUG ((
+           DEBUG_ERROR,
+           "[%a:%d] - AllocatePool failed!\n",
+           __FUNCTION__,
+           __LINE__
+           ));
+     return NULL;
+  }
+
+  IoBlock = IoBlockList->IoBlocks;
+  for (LoopIoBlock = 0; LoopIoBlock < IoBlockList->BlockCount; LoopIoBlock++) {
+    // EDK2 support only one segment. Use Segment 0 for device detection.
+    SGI_PCIE_DEVICE *RootPorts = IoBlock->RootPorts;
+    if (IoBlock->Segment == 0) {
+      for (LoopRootPort = 0; LoopRootPort < IoBlock->Count; LoopRootPort++) {
+        if (RootPorts[LoopRootPort].Ecam.Size != 0) {
+          Status = GenerateRootBridge(
+              &Bridges[Idx],
+              &RootPorts[LoopRootPort],
+              IoBlock->Translation,
+              IoBlock->Segment
+              );
+          if (!EFI_ERROR(Status)) {
+            Idx++;
+          }
+        }
+      }
+    }
+    IoBlock = (SGI_PCIE_IO_BLOCK *) ((UINT8 *)IoBlock +
+               sizeof (SGI_PCIE_IO_BLOCK) +
+                (sizeof (SGI_PCIE_DEVICE) * IoBlock->Count));
+  }
+
+  return Bridges;
+}
+
 /**
   Return all the root bridge instances in an array.
 
@@ -104,8 +293,21 @@ PciHostBridgeGetRootBridges (
   UINTN *Count
   )
 {
-  *Count = ARRAY_SIZE (mPciRootBridge);
-  return mPciRootBridge;
+  PCI_ROOT_BRIDGE *Bridges;
+  VOID *PcieMmapTableHob;
+
+  PcieMmapTableHob = GetFirstGuidHob (&gArmSgiPcieMmapTablesGuid);
+  if (PcieMmapTableHob != NULL) {
+    Bridges = PciGenerateHostBridgeInfo(
+        (SGI_PCIE_IO_BLOCK_LIST *)GET_GUID_HOB_DATA (PcieMmapTableHob), Count);
+    DynamicTableGenerationEnabled = TRUE;
+  } else {
+    *Count = ARRAY_SIZE (mPciRootBridge);
+    Bridges = mPciRootBridge;
+    DynamicTableGenerationEnabled = FALSE;
+  }
+
+  return Bridges;
 }
 
 /**
@@ -121,6 +323,17 @@ PciHostBridgeFreeRootBridges (
   UINTN           Count
   )
 {
+  UINTN Index;
+
+  if (DynamicTableGenerationEnabled) {
+    for (Index = 0; Index < Count; Index++) {
+      FreePool (Bridges[Index].DevicePath);
+    }
+
+    if (Bridges != NULL) {
+      FreePool (Bridges);
+    }
+  }
 }
 
 /**

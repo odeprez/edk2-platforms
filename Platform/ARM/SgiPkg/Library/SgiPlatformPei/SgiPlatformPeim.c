@@ -40,6 +40,8 @@ GetSgiSystemId (
   EFI_STATUS                    Status;
   UINT64                        IsolatedCpuCount;
   UINT64                        CoreCount;
+  CONST SGI_PCIE_IO_BLOCK_LIST *IoBlockList;
+  VOID                          *HobIoBlockList;
 
   Status = PeiServicesLocatePpi (&gNtFwConfigDtInfoPpiGuid, 0, NULL,
              (VOID**)&NtFwConfigInfoPpi);
@@ -109,6 +111,23 @@ GetSgiSystemId (
       Property,
       sizeof(HobData->IsolatedCpuList) + (CoreCount * sizeof(UINT64))
       );
+  }
+
+  IoBlockList = fdt_getprop(NtFwCfgDtBlob, Offset, "pcie-mmap", NULL);
+  if (IoBlockList == NULL) {
+    DEBUG ((DEBUG_WARN, "%s property not found\n", "pcie-mmap"));
+  } else if (IoBlockList->BlockCount != 0) {
+    DEBUG ((DEBUG_WARN, "Number of blocks: %x\n", IoBlockList->BlockCount));
+    DEBUG ((DEBUG_WARN, "Table Size: %x\n", IoBlockList->TableSize));
+    HobIoBlockList =  BuildGuidHob (
+        &gArmSgiPcieMmapTablesGuid,
+        IoBlockList->TableSize);
+    if (HobIoBlockList == NULL) {
+      DEBUG ((DEBUG_ERROR, "PCIe MMap HOB creation failed\n"));
+      ASSERT (FALSE);
+      return EFI_OUT_OF_RESOURCES;
+    }
+    CopyMem (HobIoBlockList, IoBlockList, IoBlockList->TableSize);
   }
 
   return EFI_SUCCESS;

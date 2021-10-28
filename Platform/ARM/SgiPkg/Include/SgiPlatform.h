@@ -70,6 +70,38 @@
 #define DRAM_BLOCK2_BASE_REMOTE(ChipId) \
           (SGI_REMOTE_CHIP_MEM_OFFSET (ChipId) + FixedPcdGet64 (PcdDramBlock2Base))
 
+/******************************************************************************
+// PCI data layout
+*******************************************************************************/
+
+typedef struct {
+  UINT64 Address;
+  UINT64 Size;
+} SGI_PCIE_CARVEOUT;
+
+typedef struct {
+  SGI_PCIE_CARVEOUT Ecam;
+  SGI_PCIE_CARVEOUT MmioL;
+  SGI_PCIE_CARVEOUT MmioH;
+  SGI_PCIE_CARVEOUT Bus;
+  UINT64 BaseInterruptId;
+} SGI_PCIE_DEVICE;
+
+typedef struct {
+  UINT64 HostbridgeId;
+  UINT64 Segment;
+  UINT64 Translation;
+  UINT64 SmmuBase;
+  UINT64 Count;
+  SGI_PCIE_DEVICE RootPorts[];
+} SGI_PCIE_IO_BLOCK;
+
+typedef struct {
+  UINT64 BlockCount;
+  UINT64 TableSize;
+  SGI_PCIE_IO_BLOCK IoBlocks[];
+} SGI_PCIE_IO_BLOCK_LIST;
+
 // List of isolated CPUs MPID
 typedef struct {
   UINT64  Count;                // Number of elements present in the list

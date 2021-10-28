@@ -32,6 +32,7 @@
 
 [Guids]
   gArmSgiPlatformIdDescriptorGuid
+  gArmSgiPcieMmapTablesGuid
 
 [Ppis]
   gNtFwConfigDtInfoPpiGuid
