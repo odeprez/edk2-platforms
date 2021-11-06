@@ -31,6 +31,9 @@
 !include MdePkg/MdeLibs.dsc.inc
 !include Platform/ARM/SgiPkg/SgiPlatformMm.dsc.inc
 
+[LibraryClasses]
+  FdtLib|EmbeddedPkg/Library/FdtLib/FdtLib.inf
+
 ################################################################################
 #
 # Pcd Section - list of all EDK II PCD Entries defined by this Platform
