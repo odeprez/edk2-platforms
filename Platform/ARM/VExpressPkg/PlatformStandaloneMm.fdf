@@ -20,7 +20,7 @@
 
 [FD.BL32_AP_MM]
 # See macro definition BL32_BASE in TF-A code at include/plat/arm/common/arm_def.h
-BaseAddress   = 0xff200000|gArmTokenSpaceGuid.PcdFdBaseAddress
+BaseAddress   = 0x7002000|gArmTokenSpaceGuid.PcdFdBaseAddress   # StMM in Trusted DRAM.
 
 # Maximum size of BL32 Image in TF-A (see include/plat/arm/common/arm_spm.def.h)
 Size          = 0x00300000|gArmTokenSpaceGuid.PcdFdSize
