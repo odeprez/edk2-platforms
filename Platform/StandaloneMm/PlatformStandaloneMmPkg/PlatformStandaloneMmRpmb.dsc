@@ -91,10 +91,12 @@
 # Pcd Section - list of all EDK II PCD Entries defined by this Platform
 #
 ################################################################################
-[PcdsFeatureFlag.common]
-  gArmTokenSpaceGuid.PcdFfaEnable|TRUE
 
 [PcdsFixedAtBuild]
+!if $(EDK2_ENABLE_FFA) == FALSE
+  gArmTokenSpaceGuid.PcdFfaEnable|0
+!endif
+
   gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x800000CF
   gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0xff
   gEfiMdePkgTokenSpaceGuid.PcdReportStatusCodePropertyMask|0x0f

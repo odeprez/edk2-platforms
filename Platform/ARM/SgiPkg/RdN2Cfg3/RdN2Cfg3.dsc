@@ -48,6 +48,11 @@
   # RdN2Cfg3 is the third variant from RdN2 Platform
   gArmSgiTokenSpaceGuid.PcdPlatformVariant|3
 
+  # Disables FFA
+!if $(EDK2_ENABLE_FFA) == FALSE
+  gArmTokenSpaceGuid.PcdFfaEnable|0
+!endif
+
 ################################################################################
 #
 # Components Section - list of all EDK II Modules needed by this Platform

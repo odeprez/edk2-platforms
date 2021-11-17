@@ -30,11 +30,15 @@
 !include MdePkg/MdeLibs.dsc.inc
 !include Platform/ARM/SgiPkg/SgiPlatformMm.dsc.inc
 
+[LibraryClasses]
+  FdtLib|EmbeddedPkg/Library/FdtLib/FdtLib.inf
+
 ################################################################################
 #
 # Pcd Section - list of all EDK II PCD Entries defined by this Platform
 #
 ################################################################################
+
 [PcdsFixedAtBuild]
 
 !if $(SECURE_STORAGE_ENABLE) == TRUE
@@ -50,4 +54,9 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingSize|0x00100000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareBase64|0x1054200000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize|0x00100000
+!endif
+
+  # Disables FFA
+!if $(EDK2_ENABLE_FFA) == FALSE
+  gArmTokenSpaceGuid.PcdFfaEnable|0
 !endif

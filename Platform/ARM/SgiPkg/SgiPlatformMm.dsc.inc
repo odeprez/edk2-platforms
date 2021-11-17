@@ -16,6 +16,8 @@
   DEFINE EDK2_ENABLE_CPU_MM                = FALSE
   # To enable Base Element Ram Mm driver, set this to TRUE.
   DEFINE EDK2_ENABLE_SRAM_MM               = FALSE
+  # To enable FF-A as communication protocol between SP and Non secure world
+  DEFINE EDK2_ENABLE_FFA                   = FALSE
 
 [LibraryClasses]
   #
@@ -121,6 +123,9 @@
   gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase|0x2A4C0000
   gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase|0x2A4B0000
 !endif
+!if $(EDK2_ENABLE_FFA) == FALSE
+  gArmTokenSpaceGuid.PcdFfaEnable|0
+!endif
 
 ###################################################################################################
 #
@@ -171,7 +176,6 @@
 !if $(EDK2_ENABLE_SRAM_MM) == TRUE
   Platform/ARM/Drivers/SramMm/SramMm.inf
 !endif
-
 ###################################################################################################
 #
 # BuildOptions Section - Define the module specific tool chain flags that should be used as

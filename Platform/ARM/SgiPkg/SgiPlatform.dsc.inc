@@ -34,6 +34,9 @@
   # To enable error injection support, set this to TRUE.
   DEFINE EDK2_ERROR_INJ_EN                  = FALSE
 
+  # To enable FF-A as communication protocol between SP and Non secure world
+  DEFINE EDK2_ENABLE_FFA                   = FALSE
+
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
 
@@ -236,6 +239,10 @@
   gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0xFF610000
   gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x10000
   gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0xFF611000
+!endif
+
+!if $(EDK2_ENABLE_FFA) == FALSE
+  gArmTokenSpaceGuid.PcdFfaEnable|0
 !endif
 
 ################################################################################

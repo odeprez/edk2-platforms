@@ -48,6 +48,11 @@
   # Number of chips in the multi-chip package
   gArmSgiTokenSpaceGuid.PcdChipCount|4
 
+  # Disables FFA
+!if $(EDK2_ENABLE_FFA) == FALSE
+  gArmTokenSpaceGuid.PcdFfaEnable|0
+!endif
+
 ################################################################################
 #
 # Components Section - list of all EDK II Modules needed by this Platform
