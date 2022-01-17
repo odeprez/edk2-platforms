@@ -55,6 +55,13 @@
   gArmTokenSpaceGuid.PcdFfaEnable|0
 !endif
 
+  # Number of local memory blocks
+  gArmSgiTokenSpaceGuid.PcdNumLocalMemBlock|3
+
+  # Expanded Remote Memory Region, used as CXL Memory
+  gArmSgiTokenSpaceGuid.PcdRemoteMemoryBase|0x3FE00000000
+  gArmSgiTokenSpaceGuid.PcdRemoteMemorySize|0x200000000
+
 ################################################################################
 #
 # Components Section - list of all EDK II Modules needed by this Platform

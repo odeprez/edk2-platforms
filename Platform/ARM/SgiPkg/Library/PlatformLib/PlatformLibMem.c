@@ -74,6 +74,7 @@ ArmPlatformGetVirtualMemoryMap (
   UINTN                         Index;
   ARM_MEMORY_REGION_DESCRIPTOR  *VirtualMemoryTable;
   EFI_RESOURCE_ATTRIBUTE_TYPE   ResourceAttributes;
+  UINTN                         TotalMemoryMapDescirptors;
 
   ResourceAttributes =
     EFI_RESOURCE_ATTRIBUTE_PRESENT |
@@ -135,9 +136,15 @@ ArmPlatformGetVirtualMemoryMap (
   ASSERT (VirtualMemoryMap != NULL);
   Index = 0;
 
+  TotalMemoryMapDescirptors = MAX_VIRTUAL_MEMORY_MAP_DESCRIPTORS;
+
+#if (FixedPcdGetBool (PcdRemoteCxlMemory))
+   TotalMemoryMapDescirptors += 1;
+#endif
+
   VirtualMemoryTable = (ARM_MEMORY_REGION_DESCRIPTOR*)AllocatePages
                        (EFI_SIZE_TO_PAGES (sizeof (ARM_MEMORY_REGION_DESCRIPTOR) *
-                       MAX_VIRTUAL_MEMORY_MAP_DESCRIPTORS));
+                       TotalMemoryMapDescirptors));
   if (VirtualMemoryTable == NULL) {
     return;
   }
@@ -250,6 +257,14 @@ ArmPlatformGetVirtualMemoryMap (
   VirtualMemoryTable[Index].Length          = PcdGet64 (PcdDramBlock2Size);
   VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
 
+#if (FixedPcdGetBool (PcdRemoteCxlMemory))
+    // Expanded Remote memory region
+    VirtualMemoryTable[++Index].PhysicalBase  = FixedPcdGet64 (PcdRemoteMemoryBase);
+    VirtualMemoryTable[Index].VirtualBase     = FixedPcdGet64 (PcdRemoteMemoryBase);
+    VirtualMemoryTable[Index].Length          = FixedPcdGet64 (PcdRemoteMemorySize);
+    VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
+#endif
+
 #if (FixedPcdGet32 (PcdChipCount) > 1)
   // Chip 1 DDR Block 1 - (2GB)
   VirtualMemoryTable[++Index].PhysicalBase  = SYSTEM_MEMORY_BASE_REMOTE (1),
@@ -322,6 +337,6 @@ ArmPlatformGetVirtualMemoryMap (
   VirtualMemoryTable[Index].Length          = 0;
   VirtualMemoryTable[Index].Attributes      = (ARM_MEMORY_REGION_ATTRIBUTES)0;
 
-  ASSERT ((Index + 1) <= MAX_VIRTUAL_MEMORY_MAP_DESCRIPTORS);
+  ASSERT ((Index + 1) <= TotalMemoryMapDescirptors);
   *VirtualMemoryMap = VirtualMemoryTable;
 }

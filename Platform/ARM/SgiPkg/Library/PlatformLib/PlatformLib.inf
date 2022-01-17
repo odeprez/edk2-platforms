@@ -57,6 +57,10 @@
   gArmTokenSpaceGuid.PcdSystemMemoryBase
   gArmTokenSpaceGuid.PcdSystemMemorySize
 
+  gArmSgiTokenSpaceGuid.PcdRemoteCxlMemory
+  gArmSgiTokenSpaceGuid.PcdRemoteMemoryBase
+  gArmSgiTokenSpaceGuid.PcdRemoteMemorySize
+
   gArmSgiTokenSpaceGuid.PcdChipCount
 
   gArmTokenSpaceGuid.PcdGicDistributorBase

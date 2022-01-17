@@ -125,5 +125,13 @@
   gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x00000000|UINT64|0x00001003
   gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0x00000000|UINT64|0x00001004
 
+  # Number of Local Memory blocks
+  gArmSgiTokenSpaceGuid.PcdNumLocalMemBlock|1|UINT32|0x00001005
+
+  # Expanded Remote Memory Base and Size
+  gArmSgiTokenSpaceGuid.PcdRemoteCxlMemory|FALSE|BOOLEAN|0x00001006
+  gArmSgiTokenSpaceGuid.PcdRemoteMemoryBase|0|UINT64|0x00001007
+  gArmSgiTokenSpaceGuid.PcdRemoteMemorySize|0|UINT64|0x00001008
+
 [Ppis]
   gNtFwConfigDtInfoPpiGuid     = { 0x6f606eb3, 0x9123, 0x4e15, { 0xa8, 0x9b, 0x0f, 0xac, 0x66, 0xef, 0xd0, 0x17 } }

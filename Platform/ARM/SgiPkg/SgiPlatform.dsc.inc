@@ -141,6 +141,10 @@
   gArmSgiTokenSpaceGuid.PcdDramBlock2Size|$(PLAT_DRAM2_SIZE)
 !endif
 
+!if $(EDK2_ENABLE_REMOTE_CXL_MEM) == TRUE
+  gArmSgiTokenSpaceGuid.PcdRemoteCxlMemory|TRUE
+!endif
+
 !if $(LPI_EN) == TRUE
   # Allow use of LPI in the response to _OSC method call
   gArmSgiTokenSpaceGuid.PcdOscLpiEnable|1
