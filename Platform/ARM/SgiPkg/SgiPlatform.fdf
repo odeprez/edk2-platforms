@@ -214,6 +214,13 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/BdsDxe/BdsDxe.inf
 
   #
+  # SRAT/HMAT Table generator
+  #
+!if $(EDK2_ENABLE_REMOTE_CXL_MEM) == TRUE
+  INF Platform/ARM/SgiPkg/Library/AcpiTableGeneratorLib/AcpiTableGenerator.inf
+!endif
+
+  #
   # Networking stack
   #
 !include NetworkPkg/Network.fdf.inc

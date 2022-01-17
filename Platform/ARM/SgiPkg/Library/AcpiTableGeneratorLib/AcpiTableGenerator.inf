@@ -1,0 +1,74 @@
+## @file
+#  ACPI table generator sources.
+#
+#  SRAT, HMAT table generator sources prepare respective ACPI tables, that
+#  help OSPM to identify device domains, memory attributes etc.
+#
+#  Copyright (c) 2022, Arm Limited. All rights reserved.<BR>
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001B
+  BASE_NAME                      = AcpiTableGeneratorLib
+  FILE_GUID                      = fd0e015b-bbbf-474c-8b68-9ea1b555f913
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = AcpiTableGeneratorEntryPoint
+
+[Sources.common]
+  AcpiTableGenerator.c
+  HmatTableGenerator.c
+  SratTableGenerator.c
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  DynamicTablesPkg/DynamicTablesPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  MdePkg/MdePkg.dec
+  Platform/ARM/Drivers/CxlDxe/CxlDxe.dec
+  Platform/ARM/SgiPkg/SgiPlatform.dec
+
+
+[LibraryClasses]
+  ArmPlatformLib
+  BaseLib
+  DebugLib
+  DxeServicesTableLib
+  HobLib
+  IoLib
+  MemoryAllocationLib
+  UefiDriverEntryPoint
+
+[Protocols]
+  gEfiAcpiTableProtocolGuid      ## CONSUMES
+  gCxlPlatformProtocolGuid       ## CONSUMES
+
+[Guids]
+
+[Depex]
+  TRUE
+
+[FixedPcd]
+  gArmPlatformTokenSpaceGuid.PcdClusterCount
+  gArmPlatformTokenSpaceGuid.PcdCoreCount
+
+  gArmSgiTokenSpaceGuid.PcdDramBlock2Base
+  gArmSgiTokenSpaceGuid.PcdDramBlock2Size
+  gArmSgiTokenSpaceGuid.PcdGicSize
+
+  gArmTokenSpaceGuid.PcdSystemMemoryBase
+  gArmTokenSpaceGuid.PcdSystemMemorySize
+
+  gArmTokenSpaceGuid.PcdMmBufferBase
+  gArmTokenSpaceGuid.PcdMmBufferSize
+
+  gArmSgiTokenSpaceGuid.PcdChipCount
+
+  gArmSgiTokenSpaceGuid.PcdNumLocalMemBlock
+
+  gArmSgiTokenSpaceGuid.PcdRemoteMemoryBase
+  gArmSgiTokenSpaceGuid.PcdRemoteMemorySize
