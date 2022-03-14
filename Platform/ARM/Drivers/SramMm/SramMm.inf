@@ -1,0 +1,52 @@
+## @file
+#  StandaloneMM driver for the Base Element Ram Ecc.
+#
+#  Driver to handle 1-bit Corrected error on Base Element Ram.
+#
+#  Copyright (c) 2022, ARM Limited. All rights reserved.
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001B
+  BASE_NAME                      = StandaloneMmSramDriver
+  FILE_GUID                      = 5fcd74e7-886f-4119-81e0-9284c6e80cb0
+  MODULE_TYPE                    = MM_STANDALONE
+  VERSION_STRING                 = 1.0
+  PI_SPECIFICATION_VERSION       = 0x00010032
+  ENTRY_POINT                    = SramMmDriverInitialize
+
+[Sources]
+  SramMm.c
+  SramMmErrorSourceInfo.c
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  Platform/ARM/Drivers/SramMm/SramMm.dec
+
+[LibraryClasses]
+  BaseMemoryLib
+  DebugLib
+  StandaloneMmDriverEntryPoint
+
+[Protocols]
+  gMmHestErrorSourceDescProtocolGuid      ##PRODUCES
+
+[FixedPcd]
+  gSramMmTokenSpaceGuid.PcdSramErrorDataBase
+  gSramMmTokenSpaceGuid.PcdSramErrorDataSize
+  gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase
+  gSramMmTokenSpaceGuid.PcdSramErrorSourceCount
+  gSramMmTokenSpaceGuid.PcdSramErrorSourceId
+  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase
+  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase
+
+[Guids]
+  gArmSramEventHandlerGuid
+
+[Depex]
+  TRUE

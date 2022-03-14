@@ -14,6 +14,8 @@
 [Defines]
   # To enable Cpu Mm driver, set this to TRUE.
   DEFINE EDK2_ENABLE_CPU_MM                = FALSE
+  # To enable Base Element Ram Mm driver, set this to TRUE.
+  DEFINE EDK2_ENABLE_SRAM_MM               = FALSE
 
 [LibraryClasses]
   #
@@ -109,6 +111,17 @@
   gCpuMmTokenSpaceGuid.PcdCpuErrorSourceId|10
 !endif
 
+!if $(EDK2_ENABLE_SRAM_MM) == TRUE
+  ## Base Element Ram
+  gSramMmTokenSpaceGuid.PcdSramErrorDataBase|0xFF622000
+  gSramMmTokenSpaceGuid.PcdSramErrorDataSize|0x100
+  gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase|804
+  gSramMmTokenSpaceGuid.PcdSramErrorSourceCount|1
+  gSramMmTokenSpaceGuid.PcdSramErrorSourceId|20
+  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase|0x2A4C0000
+  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase|0x2A4B0000
+!endif
+
 ###################################################################################################
 #
 # Components Section - list of the modules and components that will be processed by compilation
@@ -154,6 +167,9 @@
 !endif
 !if $(EDK2_ENABLE_CPU_MM) == TRUE
   Platform/ARM/Drivers/CpuMm/CpuMm.inf
+!endif
+!if $(EDK2_ENABLE_SRAM_MM) == TRUE
+  Platform/ARM/Drivers/SramMm/SramMm.inf
 !endif
 
 ###################################################################################################

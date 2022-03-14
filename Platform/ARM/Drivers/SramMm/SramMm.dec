@@ -1,0 +1,30 @@
+## @file
+#  Base Element Ram MM driver specific declarations.
+#
+#  This file defines Guids and declares Pcd values for Base Element Ram MM
+#  driver.
+#
+#  Copyright (c) 2022, ARM Limited. All rights reserved.
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  DEC_SPECIFICATION              = 0x0001001B
+  PACKAGE_NAME                   = SramMm
+  PACKAGE_GUID                   = 546f857d-681e-46f8-8805-06e326d56929
+  PACKAGE_VERSION                = 0.1
+
+[Guids]
+  gSramMmTokenSpaceGuid = { 0x1ba69041, 0x8845, 0x44de, { 0x91, 0x13, 0x3d, 0x3f, 0xeb, 0xf6, 0xe9, 0xfe }}
+  gArmSramEventHandlerGuid = { 0x7312db4f, 0xd0c4, 0x4fb5, { 0x81, 0x2c, 0xb7, 0x4b, 0xc6, 0xc4, 0xa9, 0x38 }}
+
+[PcdsFixedAtBuild.common]
+  gSramMmTokenSpaceGuid.PcdSramErrorDataBase|0|UINT64|0x00000001
+  gSramMmTokenSpaceGuid.PcdSramErrorDataSize|0|UINT64|0x00000002
+  gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase|0|UINT32|0x00000003
+  gSramMmTokenSpaceGuid.PcdSramErrorSourceCount|1|UINT32|0x00000004
+  gSramMmTokenSpaceGuid.PcdSramErrorSourceId|0|UINT16|0x00000005
+  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase|0|UINT64|0x00000006
+  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase|0|UINT64|0x00000007

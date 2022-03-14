@@ -54,6 +54,9 @@ READ_LOCK_STATUS   = TRUE
 !if $(EDK2_ENABLE_CPU_MM) == TRUE
   INF Platform/ARM/Drivers/CpuMm/CpuMm.inf
 !endif
+!if $(EDK2_ENABLE_SRAM_MM) == TRUE
+  INF Platform/ARM/Drivers/SramMm/SramMm.inf
+!endif
   INF StandaloneMmPkg/Core/StandaloneMmCore.inf
 !if $(SECURE_STORAGE_ENABLE) == TRUE
   INF Platform/ARM/Drivers/NorFlashDxe/NorFlashStandaloneMm.inf
