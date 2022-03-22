@@ -1,0 +1,86 @@
+/** @file
+  CXL Early Discovery Table (CEDT) for RD-N2-Cfg1 platform
+
+  This file describes CXL Host Bridge Structure(CHBS) and
+  CXL Fixed Memory Window Structure(CFMWS), which are used by Operating
+  System during boot for locating CXL host bridge and performing necessary
+  decoder configuration according to ACPI information.
+
+  Copyright (c) 2022, Arm Limited. All rights reserved.<BR>
+
+  SPDX-License-Identifier: BSD-2-Clause-Patent
+
+  @par Specification Reference:
+    - CXL Specificiation Revision 3.0, Version 0.7, Chapter 9.16.1,
+        CXL Early Discovery Table (CEDT)
+**/
+
+#include "SgiAcpiHeader.h"
+#include "SgiPlatform.h"
+
+#define INTERLEAVE_TARGETS  1
+
+#pragma pack (1)
+
+typedef struct {
+  EFI_ACPI_CEDT_CFMWS_STRUCTURE  Cfmws;
+  UINT32  InterleaveTarget[INTERLEAVE_TARGETS];
+} EFI_ACPI_CEDT_CFMWS_AND_INTERLEAVE_TARGET_STRUCTURE;
+
+typedef struct {
+  EFI_ACPI_DESCRIPTION_HEADER  Header;
+  EFI_ACPI_CEDT_CFMWS_AND_INTERLEAVE_TARGET_STRUCTURE CfmwsTarget;
+  EFI_ACPI_CEDT_CHBS_STRUCTURE  Chbs;
+} EFI_ACPI_CEDT_STRUCTURE_TABLE;
+
+#pragma pack ()
+
+STATIC EFI_ACPI_CEDT_STRUCTURE_TABLE Cedt = {
+  ARM_ACPI_HEADER (
+    EFI_ACPI_6_4_CEDT_SIGNATURE,
+    EFI_ACPI_CEDT_STRUCTURE_TABLE,
+    1
+  ),
+  {
+    {
+    // CFMWS
+      {
+        1,
+        EFI_ACPI_RESERVED_BYTE,
+        sizeof (EFI_ACPI_CEDT_CFMWS_AND_INTERLEAVE_TARGET_STRUCTURE)
+      },
+      EFI_ACPI_RESERVED_DWORD,
+      0x3fe00000000,
+      0x200000000,
+      0,
+      0,
+      EFI_ACPI_RESERVED_WORD,
+      4,
+      2,
+      0
+    },
+    {
+    //Interleave target list
+      0
+    }
+  },
+  {
+  // CHBS
+    {
+      0,
+      EFI_ACPI_RESERVED_BYTE,
+      sizeof (EFI_ACPI_CEDT_CHBS_STRUCTURE)
+    },
+    0,
+    1,
+    EFI_ACPI_RESERVED_DWORD,
+    0x000EF30000,
+    0x1000
+  }
+};
+
+//
+// Reference the table being generated to prevent the optimizer from removing
+// the data structure from the executable
+//
+VOID* CONST ReferenceAcpiTable = &Cedt;

@@ -23,6 +23,7 @@
   RdN2Cfg1/Madt.aslc
   RdN2Cfg1/Mpam.aslc
   RdN2Cfg1/Pptt.aslc
+  RdN2Cfg1/Cedt.aslc
   Spcr.aslc
   SsdtEvents.asl
   SsdtIoVirtSocExp.asl
@@ -86,3 +87,5 @@
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
 
   gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase
+
+  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseSize
