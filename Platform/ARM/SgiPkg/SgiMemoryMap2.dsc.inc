@@ -69,6 +69,10 @@
   gArmSgiTokenSpaceGuid.PcdSmmuSize|0x10000000
   gArmSgiTokenSpaceGuid.PcdSmmuDevIDBase|0x80000
 
+  # IO virtualization SoC expansion block
+  gArmSgiTokenSpaceGuid.PcdIoVirtBlkPortDevIdOffset|0x10000
+  gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlkDmaNumCh|8
+
   # GPIO controller
   gArmSgiTokenSpaceGuid.PcdGpioController0BaseAddress|0x0C1D0000
   gArmSgiTokenSpaceGuid.PcdGpioController0Size|0x00010000

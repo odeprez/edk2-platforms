@@ -186,3 +186,102 @@
       Return (RBUF)                                                            \
     } /* end Method(_CRS) */                                                   \
   }
+
+// x16/x8/x4_1/x4_0 ports of the IO virtualization block to which the PCIe
+// root bus or the SoC expansion block is connected.
+typedef enum {
+  PCIex4_0,
+  PCIex4_1,
+  PCIex8,
+  PCIex16,
+} ARM_RD_PCIE_PORT_ID;
+
+// x16/x8/x4_1/x4_0 ports of the IO virtualization block have a base
+// DeviceID that is added to the StreamID of the devices connected
+// to ports to create the IDs sent to the SMMUv3 and ITS.
+//
+// Stream ID coming at SMMUv3 is calculated as below:
+//    Stream ID = DMA base Stream/deviceID +
+//                DMA Channel Index + deviceID for port
+// On each IO-virtualization SoC expansion block the base DeviceID
+// for DMA is 0.
+#define DEV_ID_BASE(Port)                                                      \
+    FixedPcdGet32 (PcdIoVirtBlkPortPciex40DevIdBase) +                         \
+    (FixedPcdGet32 (PcdIoVirtBlkPortDevIdOffset) * Port)
+
+// StreamID base for PL330 DMA0 controller
+// IO virtualization SoC expansion block has DMA-0 and DMA-1 connected
+// to PCIex4_1 and PCIex16 ports respectively.
+#define DMA_STREAM_ID_BASE(DmaIdx)                                             \
+    ( DmaIdx == 0 ? DEV_ID_BASE(PCIex4_1) :                                    \
+      DmaIdx == 1 ? DEV_ID_BASE(PCIex16) :                                     \
+      0 )
+
+/** Helper macro for ID mapping table initialization of DMA Named Component
+    IORT node.
+
+    See Table 4 of Arm IORT specification, version E.b.
+
+    Output StreamID for a channel can be calculated as -
+    ((IDBase for x16/x8/x4_1/x4_0) + BaseSID of DMA controller) + Channel Idx).
+
+    @param [in] DmaIdx            Index of DMA pl330 controller connected to
+                                  a IO virtualization SoC expansion block.
+    @param [in] ChStreamIdx       Channel index within one DMA controller -
+                                  0 to 8 that includes 8 data channels, and
+                                  one instruction channel.
+**/
+#define DMA_NC_ID_TABLE_INIT(DmaIdx, ChStreamIdx)                              \
+  {                                                                            \
+    ChStreamIdx,                                       /* InputBase */         \
+    0,                                                 /* NumIds */            \
+    (DMA_STREAM_ID_BASE(DmaIdx % 2) + ChStreamIdx),    /* OutputBase */        \
+    0x0,                                               /* OutputReference */   \
+    EFI_ACPI_IORT_ID_MAPPING_FLAGS_SINGLE,             /* Flags */             \
+  }
+
+/** Helper macro for DMA Named Component node initialization for Arm Iort
+    table.
+
+    See Table 13 of Arm IORT specification, version E.b.
+
+    @param [in] DmaIdx            Index of DMA pl330 controller connected to
+                                  a IO virtualization SoC expansion block.
+**/
+#define ARM_RD_ACPI_IO_VIRT_BLK_DMA_NC_INIT(DmaIdx)                            \
+  /* RD_IOVIRT_SOC_EXP_IORT_DMA_NC_NODE */                                     \
+  {                                                                            \
+    /* EFI_ACPI_6_0_IO_REMAPPING_NAMED_COMP_NODE */                            \
+    {                                                                          \
+      {                                                                        \
+        EFI_ACPI_IORT_TYPE_NAMED_COMP,                       /* Type */        \
+        sizeof (RD_IOVIRT_SOC_EXP_IORT_DMA_NC_NODE),         /* Length */      \
+        4,                                                   /* Revision */    \
+        0,                                                   /* Identifier */  \
+        9,                                          /* NumIdMappings */        \
+        OFFSET_OF (RD_IOVIRT_SOC_EXP_IORT_DMA_NC_NODE, DmaIdMap)               \
+                                                    /* IdReference */          \
+      },                                                                       \
+      0x0,                                          /* Flags */                \
+      0x0,                                          /* CacheCoherent */        \
+      0x0,                                          /* AllocationHints */      \
+      0x0,                                          /* Reserved */             \
+      0x0,                                          /* MemoryAccessFlags */    \
+      0x30,                                         /* AddressSizeLimit */     \
+    },                                                                         \
+    {                                                                          \
+      /* Object RefName */                                                     \
+    },                                                                         \
+    /* ID mapping table */                                                     \
+    {                                                                          \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 0),              /* Data Channel - 0 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 1),              /* Data Channel - 1 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 2),              /* Data Channel - 2 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 3),              /* Data Channel - 3 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 4),              /* Data Channel - 4 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 5),              /* Data Channel - 5 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 6),              /* Data Channel - 6 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 7),              /* Data Channel - 7 */     \
+      DMA_NC_ID_TABLE_INIT(DmaIdx, 8),              /* Instruction Channel */  \
+    },                                                                         \
+  }
