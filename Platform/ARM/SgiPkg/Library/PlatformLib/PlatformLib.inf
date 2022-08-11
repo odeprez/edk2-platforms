@@ -46,6 +46,8 @@
 
   gArmSgiTokenSpaceGuid.PcdDramBlock2Base
   gArmSgiTokenSpaceGuid.PcdDramBlock2Size
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize
   gArmSgiTokenSpaceGuid.PcdGicSize
   gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlk0Base
   gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlkUartEnable
@@ -88,6 +90,9 @@
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableBase64
   gEfiMdeModulePkgTokenSpaceGuid.PcdSerialRegisterBase
+
+[FeaturePcd]
+  gArmSgiTokenSpaceGuid.PcdEinjSupported
 
 [Guids]
   gArmSgiPlatformIdDescriptorGuid

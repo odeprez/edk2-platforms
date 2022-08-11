@@ -25,6 +25,9 @@
   # To allow firmware first error handling, set this to TRUE.
   DEFINE EDK2_ENABLE_GHES_MM                = FALSE
 
+  # To enable error injection support, set this to TRUE.
+  DEFINE EDK2_ERROR_INJ_EN                  = FALSE
+
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
 
@@ -108,6 +111,10 @@
 
 !if $(PCIE_ENABLE) == TRUE
   gArmSgiTokenSpaceGuid.PcdPcieEnable|TRUE
+!endif
+
+!if $(EDK2_ERROR_INJ_EN) == TRUE
+  gArmSgiTokenSpaceGuid.PcdEinjSupported|TRUE
 !endif
 
 [PcdsFixedAtBuild.common]
@@ -217,6 +224,13 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemRevision|0x20200831
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId|0x204d5241 # ARM
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision|1
+
+!if $(EDK2_ERROR_INJ_EN) == TRUE
+  ## Error Injection Instruction Memory Space
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0xFF610000
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x10000
+  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0xFF611000
+!endif
 
 ################################################################################
 #

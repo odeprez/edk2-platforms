@@ -33,6 +33,7 @@
   gArmSgiTokenSpaceGuid.PcdVirtioBlkSupported|FALSE|BOOLEAN|0x00000001
   gArmSgiTokenSpaceGuid.PcdVirtioNetSupported|FALSE|BOOLEAN|0x00000010
   gArmSgiTokenSpaceGuid.PcdPcieEnable|FALSE|BOOLEAN|0x0000002E
+  gArmSgiTokenSpaceGuid.PcdEinjSupported|FALSE|BOOLEAN|0x00001001
 
 [PcdsFixedAtBuild]
   gArmSgiTokenSpaceGuid.PcdDramBlock2Base|0|UINT64|0x00000002
@@ -115,6 +116,11 @@
   gArmSgiTokenSpaceGuid.PcdIoVirtBlkPortDevIdOffset|0|UINT32|0x00001024
   gArmSgiTokenSpaceGuid.PcdIoVirtBlkPortPciex40DevIdBase|0|UINT32|0x00001025
   gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlkDmaNumCh|0|UINT32|0x00001026
+
+  ## EINJ Instruction reserved memory region
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0x00000000|UINT64|0x00001002
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x00000000|UINT64|0x00001003
+  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0x00000000|UINT64|0x00001004
 
 [Ppis]
   gNtFwConfigDtInfoPpiGuid     = { 0x6f606eb3, 0x9123, 0x4e15, { 0xa8, 0x9b, 0x0f, 0xac, 0x66, 0xef, 0xd0, 0x17 } }

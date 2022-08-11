@@ -55,4 +55,8 @@
 ################################################################################
 
 [Components.common]
+!if $(EDK2_ERROR_INJ_EN) == TRUE
+  Platform/ARM/SgiPkg/AcpiTables/RdN2Cfg1AcpiTablesEinj.inf
+!else
   Platform/ARM/SgiPkg/AcpiTables/RdN2Cfg1AcpiTables.inf
+!endif
