@@ -2,13 +2,16 @@
   Driver to handle and support all platform errors.
 
   Installs the SDEI and HEST ACPI tables for firmware first error handling.
+  Initializes the memory region and trigger action table required for EINJ ACPI
+  table.
 
-  Copyright (c) 2020 - 2021, ARM Limited. All rights reserved.
+  Copyright (c) 2020 - 2022, ARM Limited. All rights reserved.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
   @par Specification Reference:
     - SDEI Platform Design Document, revision c, 10 Appendix D, ACPI table
       definitions for SDEI
+    - ACPI 6.4, Table 18.23, Error Injection Table
 **/
 
 #include <IndustryStandard/Acpi.h>
@@ -19,6 +22,77 @@
 #include <Library/UefiBootServicesTableLib.h>
 #include <Protocol/AcpiTable.h>
 #include <Protocol/HestTableProtocol.h>
+
+#define EINJ_TRIGGER_ERROR_ACTION_NO    1
+
+#define GICD_BASE       (0x30000000 + 0x10000)
+#define GICD_SETSPI_NSR (0x0040)
+
+typedef struct {
+  EFI_ACPI_6_4_EINJ_TRIGGER_ACTION_TABLE        TriggerErrorHeader;
+  EFI_ACPI_6_4_EINJ_INJECTION_INSTRUCTION_ENTRY ErrorInstructionEntry[EINJ_TRIGGER_ERROR_ACTION_NO];
+} EINJ_TRIGGER_ERROR_ACTION;
+
+/**
+  Add EINJ trigger error action table.
+
+  OSPM requires at least one trigger error action entry to perform error
+  injection using EINJ. Add trigger action that programs Gicd to initiate
+  SPI interrupt Id 83.
+
+  @retval Nothing
+**/
+STATIC
+VOID
+InitializeEinjTable (
+  VOID
+  )
+{
+  // Check if EINJ feature is enabled for the platform.
+  if (!FeaturePcdGet (PcdEinjSupported)) {
+    return;
+  }
+
+  // Initialize einj instruction memory region.
+  SetMem (
+    (VOID *)FixedPcdGet64 (PcdEinjInstBufferBase),
+    FixedPcdGet64 (PcdEinjInstBufferSize),
+    0
+    );
+
+  // Populate Trigger Action table.
+  EINJ_TRIGGER_ERROR_ACTION *mEinjTriggerErrorAction =
+    (EINJ_TRIGGER_ERROR_ACTION*) FixedPcdGet64 (PcdEinjTriggerActionBase);
+
+  // Trigger Error Action Table.
+  *mEinjTriggerErrorAction = (EINJ_TRIGGER_ERROR_ACTION) {
+    {
+      sizeof (EFI_ACPI_6_4_EINJ_TRIGGER_ACTION_TABLE),   // Header Size
+      0,                                                 // Revision
+      sizeof (EINJ_TRIGGER_ERROR_ACTION),                // Table Size
+      EINJ_TRIGGER_ERROR_ACTION_NO                       // Entry Count
+    },
+    {
+     // Trigger Error Instruction 1
+     // Program GIC D register to generate EL3 interrupt
+      {
+        EFI_ACPI_6_4_EINJ_TRIGGER_ERROR,
+        EFI_ACPI_6_4_EINJ_WRITE_REGISTER_VALUE,
+        0,   // Flags
+        0,   // Reserved
+        {
+          EFI_ACPI_6_4_SYSTEM_MEMORY,
+          32,
+          0,
+          EFI_ACPI_6_4_DWORD,
+          (GICD_BASE + GICD_SETSPI_NSR),   // GICD_SETSPI_NSR base address
+        },
+        0x0000000000000053,   // Raise SPI interrupt 83, handled by the platform
+        0xffffffffffffffff    // Mask
+      },
+    }
+  };
+}
 
 /**
   Build and install the SDEI ACPI table.
@@ -159,6 +233,9 @@ PlatformErrorHandlerEntryPoint (
   )
 {
   EFI_STATUS Status;
+
+  // Initialize EINJ trigger action table.
+  InitializeEinjTable ();
 
   // Build and install SDEI table.
   Status = InstallSdeiTable ();

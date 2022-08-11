@@ -42,11 +42,18 @@
   gHestTableProtocolGuid            ## PROTOCOL ALWAYS_CONSUMED
 
 [FixedPcd]
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize
+  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase
+
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemId
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemRevision
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemTableId
+
+[FeaturePcd]
+  gArmSgiTokenSpaceGuid.PcdEinjSupported
 
 [Depex]
   AFTER gArmPlatformHestErrorSourcesGuid
