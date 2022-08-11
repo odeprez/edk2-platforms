@@ -1,0 +1,154 @@
+/** @file
+*  Copyright (c) 2022, ARM Ltd. All rights reserved.
+*
+*  SPDX-License-Identifier: BSD-2-Clause-Patent
+*
+**/
+
+#include "SgiAcpiHeader.h"
+
+#define EFI_ACPI_6_4_EINJ_SET_ERROR_TYPE_WITH_ADDRESS 0x8
+#define EINJ_INJECTION_ENTRY_COUNT 0x6
+#define PLATFORM_ERROR_TYPE_SUPPORTED (EFI_ACPI_6_4_EINJ_ERROR_PROCESSOR_CORRECTABLE |            \
+                                       EFI_ACPI_6_4_EINJ_ERROR_PROCESSOR_UNCORRECTABLE_NONFATAL | \
+                                       EFI_ACPI_6_4_EINJ_ERROR_PROCESSOR_UNCORRECTABLE_FATAL)
+
+#pragma pack (1)
+
+typedef struct {
+  EFI_ACPI_6_4_ERROR_INJECTION_TABLE_HEADER     Header;
+  EFI_ACPI_6_4_EINJ_INJECTION_INSTRUCTION_ENTRY Entry[EINJ_INJECTION_ENTRY_COUNT];
+} EFI_ACPI_6_4_ERROR_INJECTION_TABLE;
+
+#pragma pack()
+
+STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
+  {
+    ARM_ACPI_HEADER   // EFI_ACPI_DESCRIPTION_HEADER
+    (
+      EFI_ACPI_6_4_ERROR_INJECTION_TABLE_SIGNATURE,
+      EFI_ACPI_6_4_ERROR_INJECTION_TABLE,
+      EFI_ACPI_6_4_ERROR_INJECTION_TABLE_REVISION
+    ),
+    sizeof (EFI_ACPI_6_4_ERROR_INJECTION_TABLE_HEADER),   // InjectionHeaderSize
+    0x0,   // InjectionFlags
+    // Reserved
+    {
+      0x0,
+      0x0,
+      0x0
+    },
+    EINJ_INJECTION_ENTRY_COUNT   // InjectionEntryCount
+  },
+  // Injection Instruction Enteries
+  {
+    // Get Error Type Instruction Entry
+    {
+      EFI_ACPI_6_0_EINJ_GET_ERROR_TYPE,
+      EFI_ACPI_6_0_EINJ_WRITE_REGISTER_VALUE,
+      0,   // Flag
+      0,   // Reserved
+      // Register region (GAR)
+      {
+        EFI_ACPI_6_4_SYSTEM_MEMORY,
+        32,
+        0,
+        EFI_ACPI_6_4_DWORD,
+        0xFF610000
+      },   // Register region (GAR)
+      PLATFORM_ERROR_TYPE_SUPPORTED,   // Supported Error Types by platform (Processor, Vendor)
+      0xffffffffffffffff    // Register region Mask
+    },
+    // Execute Operation Instruction Entry
+    {
+      EFI_ACPI_6_4_EINJ_EXECUTE_OPERATION,
+      EFI_ACPI_6_0_EINJ_WRITE_REGISTER_VALUE,
+      0,   // Flag
+      0,   // Reserved
+      // Register region (GAR)
+      {
+        EFI_ACPI_6_4_SYSTEM_MEMORY,
+        64,
+        0,
+        EFI_ACPI_6_4_QWORD,
+        0xFF610000
+      },
+      0x0000000000000000,   // Value
+      0xffffffffffffffff    // Register region Mask
+    },
+    // Set Error Type With Address
+    {
+      EFI_ACPI_6_4_EINJ_SET_ERROR_TYPE_WITH_ADDRESS,
+      EFI_ACPI_6_0_EINJ_WRITE_REGISTER,
+      0,  // Flag
+      0,  // Reserved
+      // Register region (GAR)
+      {
+        EFI_ACPI_6_4_SYSTEM_MEMORY,
+        64,
+        0,
+        EFI_ACPI_6_4_QWORD,
+        0xFF610100
+      },
+      0x0000000000000000,   // Value
+      0xffffffffffffffff    // Register region Mask
+    },
+    // Check Busy Status
+    {
+      EFI_ACPI_6_4_EINJ_CHECK_BUSY_STATUS,
+      EFI_ACPI_6_4_EINJ_READ_REGISTER,
+      0,   // Flag
+      0,   // Reserved
+      // Register region (GAR)
+      {
+        EFI_ACPI_6_4_SYSTEM_MEMORY,
+        64,
+        0,
+        EFI_ACPI_6_4_QWORD,
+        0xFF610250
+      },
+      0x0000000000000000,   // Value
+      0xffffffffffffffff    // Register region Mask
+    },
+    // Get Status of Current Operation
+    {
+      EFI_ACPI_6_4_EINJ_GET_COMMAND_STATUS,
+      EFI_ACPI_6_4_EINJ_READ_REGISTER,
+      0,   // Flag
+      0,   // Reserved
+      // Register region (GAR)
+      {
+        EFI_ACPI_6_4_SYSTEM_MEMORY,
+        64,
+        0,
+        EFI_ACPI_6_4_QWORD,
+        0xFF610400
+      },
+      0x0000000000000000,   // Value
+      0xffffffffffffffff    // Register region Mask
+    },
+    // Get Trigger Action Table
+    {
+      EFI_ACPI_6_4_EINJ_GET_TRIGGER_ERROR_ACTION_TABLE,
+      EFI_ACPI_6_4_EINJ_WRITE_REGISTER_VALUE,
+      0,   // Flag
+      0,   // Reserved
+      // Register region (GAR)
+      {
+        EFI_ACPI_6_4_SYSTEM_MEMORY,
+        64,
+        0,
+        EFI_ACPI_6_4_QWORD,
+        0xFF610200
+      },
+      FixedPcdGet64 (PcdEinjTriggerActionBase),   // Value
+      0xffffffffffffffff    // Register region Mask
+    },
+  }
+};
+
+/*
+ * Reference the table being generated to prevent the optimizer from removing
+ * the data structure from the executable
+ */
+VOID* CONST ReferenceAcpiTable = &Einj;
