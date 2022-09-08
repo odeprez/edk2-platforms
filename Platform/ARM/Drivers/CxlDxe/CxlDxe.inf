@@ -1,0 +1,49 @@
+## @file
+#  Discovers CXL capable device and reads out device properties.
+#
+#  Copyright (c) 2022, Arm Limited. All rights reserved.<BR>
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001B
+  BASE_NAME                      = CxlDxe
+  FILE_GUID                      = 29e54f5e-365a-4235-ba62-c832d7660852
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = CxlDxeEntryPoint
+
+[Sources.common]
+  CxlDxe.c
+
+[Guids]
+  gArmRemoteCxlMemDescriptorGuid
+
+[Packages]
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  MdePkg/MdePkg.dec
+  ArmPkg/ArmPkg.dec
+  Platform/ARM/ARM.dec
+  Platform/ARM/Drivers/CxlDxe/CxlDxe.dec
+
+[LibraryClasses]
+  ArmMmuLib
+  ArmLib
+  BaseLib
+  DebugLib
+  DevicePathLib
+  DxeServicesTableLib
+  PcdLib
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+  UefiLib
+  UefiDriverEntryPoint
+
+[Protocols]
+  gEfiPciIoProtocolGuid      ##CONSUMES
+  gCxlPlatformProtocolGuid   ## PRODUCES
+  gEfiPciEnumerationCompleteProtocolGuid
+
+[Depex]
+  TRUE

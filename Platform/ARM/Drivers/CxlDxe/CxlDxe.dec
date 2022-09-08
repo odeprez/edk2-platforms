@@ -1,0 +1,21 @@
+#/** @file
+#
+# Copyright (c) 2022, Arm Limited. All rights reserved.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+#**/
+
+[Defines]
+  DEC_SPECIFICATION              = 0x0001001B
+  PACKAGE_NAME                   = CxlDxe
+  PACKAGE_GUID                   = cbeba70a-4351-4ff6-a074-6854337b39be
+  PACKAGE_VERSION                = 0.1
+
+[Guids.common]
+  gArmRemoteCxlMemDescriptorGuid = { 0x29e54f5e, 0x365a, 0x4235, { 0xba, 0x62, 0xc8, 0x32, 0xd7, 0x66, 0x08, 0x52 } }
+
+[Protocols]
+  gCxlPlatformProtocolGuid = { 0x88c7bb9c, 0x6175, 0x4bfb, { 0x96, 0x40, 0xd2, 0x53, 0xd3, 0xd8, 0x7c, 0x17 } }
+
+[Includes.common]
+  Platform/ARM/Include
