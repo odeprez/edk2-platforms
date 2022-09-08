@@ -373,6 +373,7 @@
   # SRAT/HMAT Table generator
   #
 !if $(EDK2_ENABLE_REMOTE_CXL_MEM) == TRUE
+  edk2-platforms/Platform/ARM/Drivers/CxlDxe/CxlDxe.inf
   Platform/ARM/SgiPkg/Library/AcpiTableGeneratorLib/AcpiTableGenerator.inf
 !endif
 
