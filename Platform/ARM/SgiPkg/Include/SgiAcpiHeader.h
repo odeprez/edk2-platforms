@@ -78,6 +78,15 @@ typedef struct {
   EFI_ACPI_6_4_PPTT_STRUCTURE_PROCESSOR  Package;
   RD_PPTT_MINIMAL_CLUSTER                Cluster[CLUSTER_COUNT];
 } RD_PPTT_PACKAGE;
+
+// PPTT processor package structure with SLC
+typedef struct {
+  EFI_ACPI_6_4_PPTT_STRUCTURE_PROCESSOR  Package;
+  UINT32                                 ResourceOffset;
+  EFI_ACPI_6_4_PPTT_STRUCTURE_CACHE      Slc;
+  RD_PPTT_MINIMAL_CLUSTER                Cluster[CLUSTER_COUNT];
+} RD_PPTT_SLC_PACKAGE;
+
 #pragma pack ()
 
 //
