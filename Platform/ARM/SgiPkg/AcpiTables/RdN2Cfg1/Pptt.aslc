@@ -119,7 +119,7 @@
  */
 typedef struct {
   EFI_ACPI_6_4_PROCESSOR_PROPERTIES_TOPOLOGY_TABLE_HEADER  Header;
-  RD_PPTT_PACKAGE                                          Package;
+  RD_PPTT_SLC_PACKAGE                                      Package;
 } EFI_ACPI_6_4_PROCESSOR_PROPERTIES_TOPOLOGY_TABLE;
 #pragma pack ()
 
@@ -134,8 +134,22 @@ STATIC EFI_ACPI_6_4_PROCESSOR_PROPERTIES_TOPOLOGY_TABLE Pptt = {
 
   {
     EFI_ACPI_6_4_PPTT_STRUCTURE_PROCESSOR_INIT (
-      OFFSET_OF (RD_PPTT_PACKAGE, Cluster[0]),
-      PPTT_PROCESSOR_PACKAGE_FLAGS, 0, 0, 0),
+      OFFSET_OF (RD_PPTT_SLC_PACKAGE, Slc),
+      PPTT_PROCESSOR_PACKAGE_FLAGS, 0, 0, 1),
+
+    OFFSET_OF (EFI_ACPI_6_4_PROCESSOR_PROPERTIES_TOPOLOGY_TABLE,
+               Package.Slc),
+
+    EFI_ACPI_6_4_PPTT_STRUCTURE_CACHE_INIT (
+      PPTT_CACHE_STRUCTURE_FLAGS,           /* Flag */
+      0,                                    /* Next level of cache */
+      SIZE_8MB,                             /* Size */
+      8192,                                 /* Num of sets */
+      16,                                   /* Associativity */
+      PPTT_UNIFIED_CACHE_ATTR,              /* Attributes */
+      64,                                   /* Line size */
+      RD_PPTT_CACHE_ID(0, -1, -1, L3Cache)  /* Cache id */
+    ),
 
     {
       PPTT_CLUSTER_INIT (0, 0),
