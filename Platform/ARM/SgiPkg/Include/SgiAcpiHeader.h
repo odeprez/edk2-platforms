@@ -203,15 +203,15 @@ typedef struct {
   calculation is not based on any specification.
 
   @param [in] PackageId Package instance number.
-  @param [in] ClusterId Cluster instance number (for Cluster cache, 0 otherwise)
-  @param [in] CpuId     CPU instance number (for CPU cache, 0 otherwise).
+  @param [in] ClusterId Cluster instance number (for Cluster cache, -1 otherwise)
+  @param [in] CpuId     CPU instance number (for CPU cache, -1 otherwise)
   @param [in] CacheType Identifier for cache type as defined by
                         RD_PPTT_CACHE_TYPE.
 **/
-#define RD_PPTT_CACHE_ID(PackageId, ClusterId, CoreId, CacheType)              \
+#define RD_PPTT_CACHE_ID(PackageId, ClusterId, CpuId, CacheType)               \
     (                                                                          \
       (((PackageId) & 0xF) << 20) | (((ClusterId) & 0xFF) << 12) |             \
-      (((CoreId) & 0xFF) << 4) | ((CacheType) & 0xF)                           \
+      (((CpuId) & 0xFF) << 4) | ((CacheType) & 0xF)                           \
     )
 
 // A macro to initialise the common header part of EFI ACPI tables as defined by
