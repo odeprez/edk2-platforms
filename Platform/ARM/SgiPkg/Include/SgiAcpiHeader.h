@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) 2018 - 2022, Arm Limited. All rights reserved.
+*  Copyright (c) 2018 - 2023, Arm Limited. All rights reserved.
 *
 *  SPDX-License-Identifier: BSD-2-Clause-Patent
 *
@@ -10,6 +10,8 @@
 #define __SGI_ACPI_HEADER__
 
 #include <IndustryStandard/Acpi.h>
+
+#include "SgiPlatform.h"
 
 //
 // ACPI table information used to initialize tables.
@@ -658,5 +660,113 @@ typedef struct {
         })                                                                     \
       }                                                                        \
   }
+
+// Length of MPAM MSC node
+#define MPAM_NODE_LENGTH(ResourcesPerMsc, FunctionalDepPerResource)            \
+  ((ResourcesPerMsc * sizeof(EFI_ACPI_MPAM_MSC_RESOURCE)) +                    \
+  (FunctionalDepPerResource *                                                  \
+  sizeof(EFI_ACPI_MPAM_FUNCTIONAL_DEPENDENCY_DESCRIPTOR)) +                    \
+  sizeof(EFI_ACPI_MPAM_MSC_NODE))
+
+// Macro for generating MPAM interrupt flag
+#define MPAM_MSC_INTERRUPT_FLAGS_INIT(InterruptMode, InterruptType,            \
+  AffinityType, AffinityValid)                                                 \
+  ((InterruptMode          & EFI_ACPI_MPAM_INTERRUPT_MODE_MASK)                \
+  << EFI_ACPI_MPAM_INTERRUPT_MODE_SHIFT |                                      \
+  (InterruptType           & EFI_ACPI_MPAM_INTERRUPT_TYPE_MASK)                \
+  << EFI_ACPI_MPAM_INTERRUPT_TYPE_SHIFT |                                      \
+  (AffinityType            & EFI_ACPI_MPAM_INTERRUPT_AFFINITY_TYPE_MASK)       \
+  << EFI_ACPI_MPAM_INTERRUPT_AFFINITY_TYPE_SHIFT  |                            \
+  (AffinityValid           & EFI_ACPI_MPAM_INTERRUPT_AFFINITY_VALID_MASK)      \
+  << EFI_ACPI_MPAM_INTERRUPT_AFFINITY_VALID_SHIFT |                            \
+  (EFI_ACPI_RESERVED_DWORD & EFI_ACPI_MPAM_INTERRUPT_RESERVED_MASK)            \
+  << EFI_ACPI_MPAM_INTERRUPT_RESERVED_SHIFT)
+
+// Macro for initializing MPAM MSC node
+#define MPAM_MSC_NODE_INIT(Length, InterfaceType, Identifier, BaseAddress,     \
+  MmioSize, OverflowInterrupt, OverflowInterruptFlags,                         \
+  OverflowInterruptAffinity, ErrorInterrupt, ErrorInterruptFlags,              \
+  ErrorInterruptAffinity, MaxNrdyUsec, PmLinkHID, PmLinkUID, NumMpamResources) \
+  {                                                                            \
+     Length,                                                                   \
+     InterfaceType,                                                            \
+     EFI_ACPI_RESERVED_BYTE,                                                   \
+     Identifier,                                                               \
+     BaseAddress,                                                              \
+     MmioSize,                                                                 \
+     OverflowInterrupt,                                                        \
+     OverflowInterruptFlags,                                                   \
+     EFI_ACPI_RESERVED_DWORD,                                                  \
+     OverflowInterruptAffinity,                                                \
+     ErrorInterrupt,                                                           \
+     ErrorInterruptFlags,                                                      \
+     EFI_ACPI_RESERVED_DWORD,                                                  \
+     ErrorInterruptAffinity,                                                   \
+     MaxNrdyUsec,                                                              \
+     PmLinkHID,                                                                \
+     PmLinkUID,                                                                \
+     NumMpamResources                                                          \
+  }
+
+// Macro for initializing MPAM locator
+#define MPAM_LOCATOR_INIT(descriptor1, descriptor2)                            \
+  {                                                                            \
+     descriptor1,                                                              \
+     descriptor2                                                               \
+  }
+
+// Macro for initializing MPAM resource
+#define MPAM_MSC_RESOURCE_INIT(Identifier, RisIndex, LocatorType,              \
+  locator, NumDependencies)                                                    \
+  {                                                                            \
+    Identifier,                                                                \
+    RisIndex,                                                                  \
+    EFI_ACPI_RESERVED_WORD,                                                    \
+    LocatorType,                                                               \
+    locator,                                                                   \
+    NumDependencies                                                            \
+  }
+
+// Macro for generating MPAM interrupt flags
+#define RD_MPAM_INTERRUPT_FLAGS                                                \
+  MPAM_MSC_INTERRUPT_FLAGS_INIT(0x0, 0x0, 0x0, 0x0)
+
+
+// Macro for generating locator descriptor using SLC as L3 cache
+#define RD_MPAM_PPTT_SLC_LOCATOR(ChipId)  MPAM_LOCATOR_INIT(                   \
+  RD_PPTT_CACHE_ID(                                                            \
+    ChipId, -1, -1, L3Cache), EFI_ACPI_RESERVED_DWORD)
+
+/*
+ * Macro for initializing MPAM MSC nodes. Each MSC node has one resource - an
+ * SLC slice.
+ */
+#define RD_MPAM_MSC_NODE_INIT(Identifier, BaseAddress, MmioSize, ChipId,       \
+  SlcPerChip, ResourcesPerMsc, FunctionalDepPerResource)                       \
+  MPAM_MSC_NODE_INIT(                                                          \
+    MPAM_NODE_LENGTH(ResourcesPerMsc, FunctionalDepPerResource),               \
+    EFI_ACPI_MPAM_INTERFACE_MMIO,                                              \
+    (ChipId * SlcPerChip) + Identifier,                                        \
+    BaseAddress,                                                               \
+    MmioSize,                                                                  \
+    0x0,                                                                       \
+    RD_MPAM_INTERRUPT_FLAGS,                                                   \
+    0x0,                                                                       \
+    0x0,                                                                       \
+    RD_MPAM_INTERRUPT_FLAGS,                                                   \
+    0x0,                                                                       \
+    0x0,                                                                       \
+    0x0,                                                                       \
+    0x0,                                                                       \
+    0x1                                                                        \
+    ),                                                                         \
+                                                                               \
+  MPAM_MSC_RESOURCE_INIT(                                                      \
+    0x0,                                                                       \
+    0x0,                                                                       \
+    EFI_ACPI_MPAM_LOCATION_PROCESSOR_CACHE,                                    \
+    {RD_MPAM_PPTT_SLC_LOCATOR(ChipId)},                                        \
+    0x0                                                                        \
+    )
 
 #endif /* __SGI_ACPI_HEADER__ */
