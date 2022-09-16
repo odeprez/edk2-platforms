@@ -196,7 +196,12 @@ READ_LOCK_STATUS   = TRUE
   #
   # Platform error handler driver
   #
+!if $(EDK2_ENABLE_FIRMWARE_FIRST) == TRUE
   INF Platform/ARM/SgiPkg/Drivers/PlatformErrorHandlerDxe/PlatformErrorHandlerDxe.inf
+!endif
+!if $(EDK2_ENABLE_KERNEL_FIRST) == TRUE
+  INF Platform/ARM/SgiPkg/Drivers/PlatformErrorHandlerDxe/PlatformErrorHandlerDxeRas.inf
+!endif
 
   #
   # Bds

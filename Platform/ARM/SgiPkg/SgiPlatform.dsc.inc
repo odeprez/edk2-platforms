@@ -25,6 +25,12 @@
   # To allow firmware first error handling, set this to TRUE.
   DEFINE EDK2_ENABLE_GHES_MM                = FALSE
 
+  # To enable firmware first error handling, set this to TRUE.
+  DEFINE EDK2_ENABLE_FIRMWARE_FIRST           = FALSE
+
+  # To allow kernel first error handling, set this to TRUE.
+  DEFINE EDK2_ENABLE_KERNEL_FIRST           = FALSE
+
   # To enable error injection support, set this to TRUE.
   DEFINE EDK2_ERROR_INJ_EN                  = FALSE
 
@@ -334,7 +340,12 @@
   #
   # Platform error handler driver
   #
+!if $(EDK2_ENABLE_FIRMWARE_FIRST) == TRUE
   Platform/ARM/SgiPkg/Drivers/PlatformErrorHandlerDxe/PlatformErrorHandlerDxe.inf
+!endif
+!if $(EDK2_ENABLE_KERNEL_FIRST) == TRUE
+  Platform/ARM/SgiPkg/Drivers/PlatformErrorHandlerDxe/PlatformErrorHandlerDxeRas.inf
+!endif
 
   #
   # FAT filesystem + GPT/MBR partitioning

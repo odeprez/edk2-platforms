@@ -55,8 +55,12 @@
 ################################################################################
 
 [Components.common]
+!if $(EDK2_ENABLE_KERNEL_FIRST) == TRUE
+  Platform/ARM/SgiPkg/AcpiTables/RdN2Cfg1AcpiTablesRas.inf
+!else
 !if $(EDK2_ERROR_INJ_EN) == TRUE
   Platform/ARM/SgiPkg/AcpiTables/RdN2Cfg1AcpiTablesEinj.inf
 !else
   Platform/ARM/SgiPkg/AcpiTables/RdN2Cfg1AcpiTables.inf
+!endif
 !endif
