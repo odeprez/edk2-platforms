@@ -22,7 +22,46 @@
 #include <PcieMcfgTableGenerator.h>
 #include <SgiPlatform.h>
 
+#if (FixedPcdGetBool (PcdRemoteCxlMemory))
+STATIC
+VOID
+EFIAPI
+UpdateCxlDeviceInfo (
+  IN  AML_ROOT_NODE_HANDLE  RootNodeHandle,
+  IN  UINT64                Idx
+  )
+{
+  EFI_STATUS                Status;
+  AML_OBJECT_NODE_HANDLE    NameOpCxlNode;
+  UINT8                     CxlName[SGI_PCI_DEV_NAME_LEN];
+
+  Status = AmlFindNode (
+             RootNodeHandle,
+             "\\_SB_.CXL0._UID",
+             &NameOpCxlNode
+             );
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_WARN, "Not found CXL0 UID\n"));
+    return;
+  }
+
+  Status = AmlNameOpUpdateInteger (NameOpCxlNode, Idx);
+
+  Status = AmlFindNode (RootNodeHandle, "\\_SB.CXL0", &NameOpCxlNode);
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_WARN, "Not found CXL0 \n"));
+    return;
+  }
+
+  AsciiSPrint ((CHAR8 *)CxlName, sizeof (CxlName), "CXL%d", Idx);
+  AmlDeviceOpUpdateName (NameOpCxlNode, (CHAR8 *)CxlName);
+
+  return;
+}
+#endif
+
 extern CHAR8 pciessdttemplate_aml_code[];
+extern CHAR8 pciecxlssdttemplate_aml_code[];
 
 STATIC
 EFI_STATUS
@@ -219,10 +258,18 @@ GenerateAndInstallPcieSsdt (
   }
 
   for (Idx = 0; Idx < Count; Idx++) {
+#if (FixedPcdGetBool (PcdRemoteCxlMemory))
+    Status = AmlParseDefinitionBlock(
+        (EFI_ACPI_DESCRIPTION_HEADER *) pciecxlssdttemplate_aml_code,
+        &RootNodeHandle
+        );
+    UpdateCxlDeviceInfo (RootNodeHandle, (UINT64) Config[Idx].Index);
+#else
     Status = AmlParseDefinitionBlock(
         (EFI_ACPI_DESCRIPTION_HEADER *) pciessdttemplate_aml_code,
         &RootNodeHandle
         );
+#endif
     if (EFI_ERROR (Status)) {
       DEBUG ((
             DEBUG_ERROR,

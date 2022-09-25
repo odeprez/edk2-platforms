@@ -17,6 +17,7 @@
   PcieIortGenerator.c
   PcieMcfgTableGenerator.c
   PcieSsdtTemplate.asl
+  PcieCxlSsdtTemplate.asl
 
 [Packages]
   ArmPkg/ArmPkg.dec
@@ -46,6 +47,7 @@
   gArmSgiTokenSpaceGuid.PcdSmmuGErrorGsiv
   gArmSgiTokenSpaceGuid.PcdSmmuPriGsiv
   gArmSgiTokenSpaceGuid.PcdSmmuSyncGsiv
+  gArmSgiTokenSpaceGuid.PcdRemoteCxlMemory
 
 [Protocols]
   gEfiAcpiTableProtocolGuid          ## CONSUMES
