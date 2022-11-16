@@ -18,7 +18,7 @@
 
 // Total number of descriptors, including the final "end-of-table" descriptor.
 #define MAX_VIRTUAL_MEMORY_MAP_DESCRIPTORS                                     \
-          ((13 + (FixedPcdGet32 (PcdChipCount) * 2)) +                         \
+          ((14 + (FixedPcdGet32 (PcdChipCount) * 2)) +                         \
           (FeaturePcdGet (PcdEinjSupported)) +                                 \
            ((FeaturePcdGet (PcdPcieEnable) == TRUE) ? 1 : 0) +                 \
            (FixedPcdGet32 (PcdIoVirtSocExpBlkUartEnable) *                     \
@@ -210,6 +210,11 @@ ArmPlatformGetVirtualMemoryMap (
 #endif
 #endif
 #endif
+  // Expansion AXI - Debug UART
+  VirtualMemoryTable[++Index].PhysicalBase  = FixedPcdGet64 (PcdSerialDbgRegisterBase);
+  VirtualMemoryTable[Index].VirtualBase     = FixedPcdGet64 (PcdSerialDbgRegisterBase);
+  VirtualMemoryTable[Index].Length          = SIZE_64KB;
+  VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_DEVICE;
 
   // DDR - (2GB - 16MB)
   VirtualMemoryTable[++Index].PhysicalBase  = PcdGet64 (PcdSystemMemoryBase);

@@ -90,6 +90,7 @@
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableBase64
   gEfiMdeModulePkgTokenSpaceGuid.PcdSerialRegisterBase
+  gArmPlatformTokenSpaceGuid.PcdSerialDbgRegisterBase
 
 [FeaturePcd]
   gArmSgiTokenSpaceGuid.PcdEinjSupported

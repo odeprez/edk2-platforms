@@ -48,6 +48,7 @@
   gArmSgiTokenSpaceGuid.PcdVirtioNetSize
 
   gArmPlatformTokenSpaceGuid.PcdSerialDbgUartClkInHz
+  gArmPlatformTokenSpaceGuid.PcdSerialDbgRegisterBase
 
 [Depex]
   TRUE
