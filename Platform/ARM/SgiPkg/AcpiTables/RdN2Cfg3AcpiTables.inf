@@ -53,12 +53,17 @@
   gArmTokenSpaceGuid.PcdPciBusMin
   gArmTokenSpaceGuid.PcdPciBusMax
 
+  gArmSgiTokenSpaceGuid.PcdChipCount
   gArmSgiTokenSpaceGuid.PcdGpioController0BaseAddress
   gArmSgiTokenSpaceGuid.PcdGpioController0Size
   gArmSgiTokenSpaceGuid.PcdGpioController0Interrupt
   gArmSgiTokenSpaceGuid.PcdGtFrame0Gsiv
   gArmSgiTokenSpaceGuid.PcdGtFrame1Gsiv
   gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlk0Base
+  gArmSgiTokenSpaceGuid.PcdIoVirtBlkCountPerChip
+  gArmSgiTokenSpaceGuid.PcdIoVirtBlkPortDevIdOffset
+  gArmSgiTokenSpaceGuid.PcdIoVirtBlkPortPciex40DevIdBase
+  gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlkDmaNumCh
   gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlkUartEnable
   gArmSgiTokenSpaceGuid.PcdMaxAddressBitsPerChip
   gArmSgiTokenSpaceGuid.PcdOscLpiEnable
