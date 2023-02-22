@@ -132,7 +132,11 @@
 
   # DRAM Block2 Base and Size
   gArmSgiTokenSpaceGuid.PcdDramBlock2Base|0x8080000000
+!ifndef $(PLAT_DRAM2_SIZE)
   gArmSgiTokenSpaceGuid.PcdDramBlock2Size|0x180000000
+!else
+  gArmSgiTokenSpaceGuid.PcdDramBlock2Size|$(PLAT_DRAM2_SIZE)
+!endif
 
 !if $(LPI_EN) == TRUE
   # Allow use of LPI in the response to _OSC method call
