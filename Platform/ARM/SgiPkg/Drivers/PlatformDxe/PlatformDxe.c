@@ -9,13 +9,24 @@
 #include <IndustryStandard/Acpi.h>
 
 #include <Library/AcpiLib.h>
+#include <Library/ArmMmuLib.h>
 #include <Library/DebugLib.h>
 #include <Library/HobLib.h>
+#include <Library/IoLib.h>
+#include <Library/TimerLib.h>
 #include <Library/PL011UartLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 
 #include <IoVirtSoCExp.h>
 #include <SgiPlatform.h>
+
+// SMMUv3 Global Bypass Attribute (GBPA) register offset.
+#define SMMU_GBPA                         0x0044
+
+// SMMU_GBPA register fields.
+#define SMMU_GBPA_UPDATE                  BIT31
+#define SMMU_GBPA_ABORT                   BIT20
+#define SMMU_REG_SIZE                     (0x4000000U)
 
 VOID
 InitVirtioDevices (
@@ -204,6 +215,92 @@ CheckAndUpdateAcpiTable (
   return TRUE;
 }
 
+/**
+  Poll the SMMU register and test the value based on the mask.
+
+  @param [in]  SmmuReg    Base address of the SMMU register.
+  @param [in]  Mask       Mask of register bits to monitor.
+  @param [in]  Value      Expected value.
+
+  @retval EFI_SUCCESS     Success.
+  @retval EFI_TIMEOUT     Timeout.
+**/
+STATIC
+EFI_STATUS
+EFIAPI
+SmmuV3Poll (
+  IN  UINT64 SmmuReg,
+  IN  UINT32 Mask,
+  IN  UINT32 Value
+  )
+{
+  UINT32 RegVal;
+  UINTN  Count;
+
+  // Set 1ms timeout value.
+  Count = 10;
+  do {
+    RegVal = MmioRead32 (SmmuReg);
+    if ((RegVal & Mask) == Value) {
+      return EFI_SUCCESS;
+    }
+    MicroSecondDelay (100);
+  } while ((--Count) > 0);
+
+  DEBUG ((DEBUG_ERROR, "Timeout polling SMMUv3 register @%p\n", SmmuReg));
+  DEBUG ((
+    DEBUG_ERROR,
+    "Read value 0x%x, expected 0x%x\n",
+    RegVal,
+    ((Value == 0) ? (RegVal & ~Mask) : (RegVal | Mask))
+    ));
+  return EFI_TIMEOUT;
+}
+
+/**
+  Initialise the SMMUv3 to set Non-secure streams to bypass the SMMU.
+
+  @param [in]  SmmuReg    Base address of the SMMUv3.
+
+  @retval EFI_SUCCESS     Success.
+  @retval EFI_TIMEOUT     Timeout.
+**/
+STATIC
+EFI_STATUS
+EFIAPI
+SmmuV3Init (
+  IN  UINT64 SmmuBase
+  )
+{
+  EFI_STATUS  Status;
+  UINT32      RegVal;
+
+  // Attribute update has completed when SMMU_(S)_GBPA.Update bit is 0.
+  Status = SmmuV3Poll (SmmuBase + SMMU_GBPA, SMMU_GBPA_UPDATE, 0);
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  // SMMU_(S)_CR0 resets to zero with all streams bypassing the SMMU,
+  // so just abort all incoming transactions.
+  RegVal = MmioRead32 (SmmuBase + SMMU_GBPA);
+
+  // TF-A configures the SMMUv3 to abort all incoming transactions.
+  // Clear the SMMU_GBPA.ABORT to allow Non-secure streams to bypass
+  // the SMMU.
+  RegVal &= ~SMMU_GBPA_ABORT;
+  RegVal |= SMMU_GBPA_UPDATE;
+
+  MmioWrite32 (SmmuBase + SMMU_GBPA, RegVal);
+
+  Status = SmmuV3Poll (SmmuBase + SMMU_GBPA, SMMU_GBPA_UPDATE, 0);
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  return EFI_SUCCESS;
+}
+
 EFI_STATUS
 EFIAPI
 ArmSgiPkgEntryPoint (
@@ -211,6 +308,10 @@ ArmSgiPkgEntryPoint (
   IN EFI_SYSTEM_TABLE   *SystemTable
   )
 {
+  SGI_PCIE_IO_BLOCK_LIST *IoBlockList;
+  SGI_PCIE_IO_BLOCK *IoBlock;
+  VOID *PcieMmapTableHob;
+  UINTN LoopIoBlock;
   EFI_STATUS              Status;
 
   Status = LocateAndInstallAcpiFromFvConditional (
@@ -225,5 +326,32 @@ ArmSgiPkgEntryPoint (
   InitVirtioDevices ();
   InitIoVirtSocExpBlkUartControllers ();
 
+  PcieMmapTableHob = GetFirstGuidHob (&gArmSgiPcieMmapTablesGuid);
+
+  if (PcieMmapTableHob != NULL) {
+    IoBlockList = (SGI_PCIE_IO_BLOCK_LIST *)GET_GUID_HOB_DATA (PcieMmapTableHob);
+    IoBlock = IoBlockList->IoBlocks;
+    for (LoopIoBlock = 0; LoopIoBlock < IoBlockList->BlockCount;
+        LoopIoBlock++) {
+      Status = ArmSetMemoryAttributes (
+                IoBlock->SmmuBase,
+                SMMU_REG_SIZE,
+                EFI_MEMORY_UC,
+                0
+                );
+      if (EFI_ERROR(Status)) {
+        return Status;
+      }
+
+      Status = SmmuV3Init (IoBlock->SmmuBase);
+      if (EFI_ERROR (Status)) {
+        DEBUG ((DEBUG_ERROR,
+              "%a: Failed to initialise SMMUv3 in bypass mode.\n", __FUNCTION__));
+      }
+      IoBlock = (SGI_PCIE_IO_BLOCK *) ((UINT8 *)IoBlock +
+          sizeof (SGI_PCIE_IO_BLOCK) +
+          (sizeof (SGI_PCIE_DEVICE) * IoBlock->Count));
+    }
+  }
   return Status;
 }
