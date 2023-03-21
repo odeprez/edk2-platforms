@@ -4,7 +4,7 @@
   This file describes the peripheral devices, system hardware features and the
   information about supported power events.
 
-  Copyright (c) 2022, Arm Limited. All rights reserved.
+  Copyright (c) 2022 - 2023, Arm Limited. All rights reserved.
 
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
@@ -130,7 +130,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000500, 0x06000504, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000800, 0x06000804, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -155,7 +155,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000518, 0x0600051C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000818, 0x0600081C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -180,7 +180,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000530, 0x06000534, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000830, 0x06000834, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -205,7 +205,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000548, 0x0600054C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000848, 0x0600084C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -230,7 +230,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x400006000500, 0x400006000504, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x400006000800, 0x400006000804, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -256,7 +256,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x400006000518, 0x40000600051C, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x400006000818, 0x40000600081C, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -282,7 +282,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x400006000530, 0x400006000534, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x400006000830, 0x400006000834, 20, 160, 160, 115,
                              115, 5)
        )
 
@@ -308,7 +308,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x400006000548, 0x40000600054C, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x400006000848, 0x40000600084C, 20, 160, 160, 115,
                              115, 5)
        )
 
@@ -334,7 +334,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x800006000500, 0x800006000504, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x800006000800, 0x800006000804, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -360,7 +360,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x800006000518, 0x80000600051C, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x800006000818, 0x80000600081C, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -386,7 +386,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x800006000530, 0x800006000534, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x800006000830, 0x800006000834, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -412,7 +412,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x800006000548, 0x80000600054C, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0x800006000848, 0x80000600084C, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -438,7 +438,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0xC00006000500, 0xC00006000504, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0xC00006000800, 0xC00006000804, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -463,7 +463,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0xC00006000518, 0xC0000600051C, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0xC00006000818, 0xC0000600081C, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -488,7 +488,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0xC00006000530, 0xC00006000534, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0xC00006000830, 0xC00006000834, 20, 160, 160, 115,
                              115, 5)
         )
 
@@ -513,7 +513,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0xC00006000548, 0xC0000600054C, 20, 160, 160, 115,
+          CPPC_PACKAGE_INIT (0xC00006000848, 0xC0000600084C, 20, 160, 160, 115,
                              115, 5)
         )
 

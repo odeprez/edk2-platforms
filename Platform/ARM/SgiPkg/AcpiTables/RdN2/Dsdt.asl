@@ -1,9 +1,16 @@
 /** @file
 *  Differentiated System Description Table Fields (DSDT)
 *
-*  Copyright (c) 2020-2021, Arm Ltd. All rights reserved.
+* This file describes the peripheral devices, system hardware features and the
+* information about supported power events.
+*
+*  Copyright (c) 2020 - 2023, Arm Limited. All rights reserved.
 *
 *  SPDX-License-Identifier: BSD-2-Clause-Patent
+*
+* @par Specification Reference:
+*   - ACPI 6.4, Chapter 5, Section 5.2.11.1, Differentiated System Description
+*     Table (DSDT)
 *
 **/
 
@@ -124,7 +131,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000500, 0x06000504, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000800, 0x06000804, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -148,7 +155,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000518, 0x0600051C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000818, 0x0600081C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -172,7 +179,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000530, 0x06000534, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000830, 0x06000834, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -196,7 +203,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000548, 0x0600054C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000848, 0x0600084C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -220,7 +227,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000560, 0x06000564, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000860, 0x06000864, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -244,7 +251,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000578, 0x0600057C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000878, 0x0600087C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -268,7 +275,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000590, 0x06000594, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000890, 0x06000894, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -292,7 +299,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x060005A8, 0x060005AC, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x060008A8, 0x060008AC, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -316,7 +323,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x060005C0, 0x060005C4, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x060008C0, 0x060008C4, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -340,7 +347,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x060005D8, 0x060005DC, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x060008D8, 0x060008DC, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -364,7 +371,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x060005F0, 0x060005F4, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x060008F0, 0x060008F4, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -388,7 +395,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000608, 0x0600060C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000908, 0x0600090C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -412,7 +419,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000620, 0x06000624, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000920, 0x06000924, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -436,7 +443,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000638, 0x0600063C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000938, 0x0600093C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -460,7 +467,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000650, 0x06000654, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000950, 0x06000954, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
@@ -484,7 +491,7 @@ DefinitionBlock ("DsdtTable.aml", "DSDT", 2, "ARMLTD", "ARMSGI",
         Name (_STA, 0xF)
 
         Name (_CPC, Package()
-          CPPC_PACKAGE_INIT (0x06000668, 0x0600066C, 20, 160, 160, 115, 115, 5)
+          CPPC_PACKAGE_INIT (0x06000968, 0x0600096C, 20, 160, 160, 115, 115, 5)
         )
 
         Name (_PSD, Package () {
