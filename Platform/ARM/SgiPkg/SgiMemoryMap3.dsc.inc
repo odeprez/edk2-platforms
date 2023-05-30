@@ -61,8 +61,11 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingBase64|0x0601400000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareBase64|0x0602800000
 
-  # Address bus width - 64TB address space
-  gArmSgiTokenSpaceGuid.PcdMaxAddressBitsPerChip|46
+  # Address bus width - 64GB address space
+  gArmSgiTokenSpaceGuid.PcdMaxAddressBitsPerChip|36
+
+
+  gArmSgiTokenSpaceGuid.PcdRemoteDramAddressBit|44
 
   # Timer & Watchdog interrupts
   gArmSgiTokenSpaceGuid.PcdGtFrame0Gsiv|109

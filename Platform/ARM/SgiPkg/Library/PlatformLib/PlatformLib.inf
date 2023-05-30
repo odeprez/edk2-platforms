@@ -52,6 +52,7 @@
   gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlk0Base
   gArmSgiTokenSpaceGuid.PcdIoVirtSocExpBlkUartEnable
   gArmSgiTokenSpaceGuid.PcdMaxAddressBitsPerChip
+  gArmSgiTokenSpaceGuid.PcdRemoteDramAddressBit
 
   gArmTokenSpaceGuid.PcdSystemMemoryBase
   gArmTokenSpaceGuid.PcdSystemMemorySize

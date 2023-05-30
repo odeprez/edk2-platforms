@@ -36,8 +36,11 @@
   gArmSgiTokenSpaceGuid.PcdEinjSupported|FALSE|BOOLEAN|0x00001001
 
 [PcdsFixedAtBuild]
+
   gArmSgiTokenSpaceGuid.PcdDramBlock2Base|0|UINT64|0x00000002
   gArmSgiTokenSpaceGuid.PcdDramBlock2Size|0|UINT64|0x00000003
+  gArmSgiTokenSpaceGuid.PcdRemoteDramAddressBit|0x0|UINT64|0x0000102A
+
 
   # Virtio Block device
   gArmSgiTokenSpaceGuid.PcdVirtioBlkBaseAddress|0x00000000|UINT32|0x00000004

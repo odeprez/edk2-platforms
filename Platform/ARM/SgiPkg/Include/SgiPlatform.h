@@ -58,6 +58,8 @@
 // RD-Fremont-Cfg1 Platform Identification values
 #define RD_Fremont_CFG1_PART_NUM                  0x7F9
 #define RD_Fremont_CFG1_CONF_ID                   0x0
+#define RD_Fremont_CFG2_PART_NUM                  0x7EE
+#define RD_Fremont_CFG2_CONF_ID                   0x0
 
 #define SGI_CONFIG_MASK                           0x0F
 #define SGI_CONFIG_SHIFT                          0x1C
@@ -73,6 +75,12 @@
 // Base address of the DRAM1 block in a remote chip
 #define SYSTEM_MEMORY_BASE_REMOTE(ChipId) \
           (SGI_REMOTE_CHIP_MEM_OFFSET (ChipId) + FixedPcdGet64 (PcdSystemMemoryBase))
+
+// Base address of the DRAM2 block in a remote chip for Fremont platform
+#define DRAM_BLOCK2_BASE_REMOTE_FREMONT(ChipId) ( \
+          ((1ULL << FixedPcdGet64 (PcdRemoteDramAddressBit)) * (ChipId)) + \
+          FixedPcdGet64 (PcdDramBlock2Base) \
+          )
 
 // Base address of the DRAM2 block in a remote chip
 #define DRAM_BLOCK2_BASE_REMOTE(ChipId) \
@@ -149,6 +157,7 @@ typedef enum {
   RdV2,
   RdFremont,
   RdFremontCfg1,
+  RdFremontCfg2,
 } ARM_RD_PRODUCT_ID;
 
 // Arm ProductId look-up table

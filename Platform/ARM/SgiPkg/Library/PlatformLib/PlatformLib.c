@@ -97,6 +97,12 @@ STATIC CONST SGI_PRODUCT_ID_LOOKUP SgiProductIdLookup[] = {
     RD_Fremont_CFG1_CONF_ID,
     0
   },
+  {
+    RdFremontCfg2,
+    RD_Fremont_CFG2_PART_NUM,
+    RD_Fremont_CFG2_CONF_ID,
+    1
+  },
 };
 
 EFI_BOOT_MODE

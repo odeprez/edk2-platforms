@@ -34,6 +34,28 @@
   VirtualMemoryTable[Index].Attributes     = ARM_MEMORY_REGION_ATTRIBUTE_DEVICE;
 
 
+#if (FixedPcdGet32 (PcdChipCount) > 1)
+/**
+  Return the physical address of the second DRAM on remote chip.
+
+  @param[in]  ChipIdx   The identifier of the chip
+**/
+STATIC
+EFI_PHYSICAL_ADDRESS
+GetRemoteDram2BaseAddr (
+  IN UINT8 ChipIdx
+  )
+{
+  UINT8                         SgiProductIdx;
+
+  SgiProductIdx = SgiGetProductId();
+  if (SgiProductIdx == RdFremontCfg2)
+    return DRAM_BLOCK2_BASE_REMOTE_FREMONT(ChipIdx);
+
+  return DRAM_BLOCK2_BASE_REMOTE(ChipIdx);
+}
+#endif
+
 /**
   Returns the Virtual Memory Map of the platform.
 
@@ -78,7 +100,7 @@ ArmPlatformGetVirtualMemoryMap (
    BuildResourceDescriptorHob (
      EFI_RESOURCE_SYSTEM_MEMORY,
      ResourceAttributes,
-     DRAM_BLOCK2_BASE_REMOTE (1),
+     GetRemoteDram2BaseAddr (1),
      FixedPcdGet64 (PcdDramBlock2Size));
 
 #if (FixedPcdGet32 (PcdChipCount) > 2)
@@ -91,7 +113,7 @@ ArmPlatformGetVirtualMemoryMap (
    BuildResourceDescriptorHob (
      EFI_RESOURCE_SYSTEM_MEMORY,
      ResourceAttributes,
-     DRAM_BLOCK2_BASE_REMOTE (2),
+     GetRemoteDram2BaseAddr (2),
      FixedPcdGet64 (PcdDramBlock2Size));
 
 #if (FixedPcdGet32 (PcdChipCount) > 3)
@@ -104,7 +126,7 @@ ArmPlatformGetVirtualMemoryMap (
    BuildResourceDescriptorHob (
      EFI_RESOURCE_SYSTEM_MEMORY,
      ResourceAttributes,
-     DRAM_BLOCK2_BASE_REMOTE (3),
+     GetRemoteDram2BaseAddr (3),
      FixedPcdGet64 (PcdDramBlock2Size));
 #endif
 #endif
@@ -236,8 +258,8 @@ ArmPlatformGetVirtualMemoryMap (
   VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
 
   // Chip 1 DDR Block 2 - (6GB)
-  VirtualMemoryTable[++Index].PhysicalBase  = DRAM_BLOCK2_BASE_REMOTE (1),
-  VirtualMemoryTable[Index].VirtualBase     = DRAM_BLOCK2_BASE_REMOTE (1),
+  VirtualMemoryTable[++Index].PhysicalBase  = GetRemoteDram2BaseAddr (1),
+  VirtualMemoryTable[Index].VirtualBase     = GetRemoteDram2BaseAddr (1),
   VirtualMemoryTable[Index].Length          = PcdGet64 (PcdDramBlock2Size);
   VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
 
@@ -249,8 +271,8 @@ ArmPlatformGetVirtualMemoryMap (
   VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
 
   // Chip 2 DDR Block 2 - (6GB)
-  VirtualMemoryTable[++Index].PhysicalBase  = DRAM_BLOCK2_BASE_REMOTE (2),
-  VirtualMemoryTable[Index].VirtualBase     = DRAM_BLOCK2_BASE_REMOTE (2),
+  VirtualMemoryTable[++Index].PhysicalBase  = GetRemoteDram2BaseAddr (2),
+  VirtualMemoryTable[Index].VirtualBase     = GetRemoteDram2BaseAddr (2),
   VirtualMemoryTable[Index].Length          = PcdGet64 (PcdDramBlock2Size);
   VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
 
@@ -262,8 +284,8 @@ ArmPlatformGetVirtualMemoryMap (
   VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
 
   // Chip 3 DDR Block 2 - (6GB)
-  VirtualMemoryTable[++Index].PhysicalBase  = DRAM_BLOCK2_BASE_REMOTE (3),
-  VirtualMemoryTable[Index].VirtualBase     = DRAM_BLOCK2_BASE_REMOTE (3),
+  VirtualMemoryTable[++Index].PhysicalBase  = GetRemoteDram2BaseAddr (3),
+  VirtualMemoryTable[Index].VirtualBase     = GetRemoteDram2BaseAddr (3),
   VirtualMemoryTable[Index].Length          = PcdGet64 (PcdDramBlock2Size);
   VirtualMemoryTable[Index].Attributes      = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
 #endif
