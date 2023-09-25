@@ -30,6 +30,7 @@
 
 [LibraryClasses]
   BaseMemoryLib
+  IoLib
   DebugLib
   StandaloneMmDriverEntryPoint
 

@@ -19,8 +19,13 @@
 ################################################################################
 
 [FD.BL32_AP_MM]
+!if $(EDK2_SPMC_AT_EL2) == TRUE
+BaseAddress   = 0xf9302000|gArmTokenSpaceGuid.PcdFdBaseAddress  # UEFI in DRAM + 128MB.
+!else
 BaseAddress   = 0xff200000|gArmTokenSpaceGuid.PcdFdBaseAddress  # UEFI in DRAM + 128MB.
+!endif
 Size          = 0x00e00000|gArmTokenSpaceGuid.PcdFdSize         # The size in bytes of the device (64MiB).
+
 ErasePolarity = 1
 
 BlockSize     = 0x00001000

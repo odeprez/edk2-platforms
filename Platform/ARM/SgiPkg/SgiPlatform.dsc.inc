@@ -37,6 +37,9 @@
   # To enable FF-A as communication protocol between SP and Non secure world
   DEFINE EDK2_ENABLE_FFA                   = FALSE
 
+  # To enable drivers required for SPMC running at EL3
+  DEFINE EDK2_SPMC_AT_EL2                  = FALSE
+
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
 
@@ -228,7 +231,11 @@
   # size of this buffer from ATF, hard-code it here
   #
   ## MM Communicate
+!if $(EDK2_SPMC_AT_EL2) == TRUE
+  gArmTokenSpaceGuid.PcdMmBufferBase|0xF8200000
+!else
   gArmTokenSpaceGuid.PcdMmBufferBase|0xFF600000
+!endif
   gArmTokenSpaceGuid.PcdMmBufferSize|0x10000
 
   # ACPI Table Header IDs
