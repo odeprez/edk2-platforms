@@ -6,7 +6,7 @@
   implemented, cache configuration, ways of associativity and other
   information related to cache memory installed.
 
-  Copyright (c) 2021 - 2022, Arm Limited. All rights reserved.
+  Copyright (c) 2021 - 2023, Arm Limited. All rights reserved.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
   @par Specification Reference:
@@ -335,6 +335,7 @@ InstallType7CacheInformation (
     mArmRdSmbiosType7[4].Base.Associativity = CacheAssociativity16Way;
     break;
   case RdV2:
+  case RdFremont:
     /* L1 instruction cache */
     mArmRdSmbiosType7[0].Base.MaximumCacheSize2 = 64;    // 64KB
     mArmRdSmbiosType7[0].Base.InstalledSize2 = 64;       // 64KB

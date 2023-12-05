@@ -6,7 +6,7 @@
   family, processor id, maximum operating frequency, and other information
   related to the processor.
 
-  Copyright (c) 2021 - 2022, Arm Limited. All rights reserved.
+  Copyright (c) 2021 - 2023, Arm Limited. All rights reserved.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
   @par Specification Reference:
@@ -44,6 +44,7 @@
   "Neoverse-N2\0"                                       \
   "Neoverse-N2\0"                                       \
   "Neoverse-V2\0"                                       \
+  "Neoverse-Poseidon\0"                                 \
   "000-0\0"                     /* Serial number */     \
   "783-3\0"                                             \
   "786-1\0"                                             \
@@ -54,7 +55,8 @@
   "7B7-1\0"                                             \
   "7B6-1\0"                                             \
   "7B7-1\0"                                             \
-  "7F2-1\0"
+  "7F2-1\0"                                             \
+  "7EE-1\0"
 
 typedef enum {
   PartNumber = 1,
@@ -178,6 +180,7 @@ InstallType4ProcessorInformation (
     mArmRdSmbiosType4.Base.EnabledCoreCount = CoreCount;
     mArmRdSmbiosType4.Base.ThreadCount = CoreCount;
     break;
+  case RdFremont:
   case RdN2:
   case RdN2Cfg1:
   case RdV2:
