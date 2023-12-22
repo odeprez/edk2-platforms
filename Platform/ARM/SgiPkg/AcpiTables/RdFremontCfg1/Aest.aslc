@@ -1,0 +1,113 @@
+/** @file
+*  Arm Error Source Table (AEST) for RD-N2-Cfg1 platform
+*
+*  This file describes the hardware error nodes, interface for each node that
+*  carries error information and supported interrupts by the node.
+*
+*  Copyright (c) 2021 - 2022, ARM Ltd. All rights reserved.
+*
+*  SPDX-License-Identifier: BSD-2-Clause-Patent
+*
+*  @par Specification Reference:
+*    - ACPI for the Armv8 RAS Extensions, Version 1.1, Chpater 2, The Arm Error
+*      Source Table.
+**/
+
+#include <IndustryStandard/ArmErrorSourceTable.h>
+#include "SgiAcpiHeader.h"
+
+#define MAX_INTERRUPT_TYPE 2
+#define MAX_NODES          1
+
+#pragma pack (1)
+
+typedef union {
+  EFI_ACPI_AEST_PROCESSOR_STRUCT         Proc;
+  EFI_ACPI_AEST_MEMORY_CONTROLLER_STRUCT Mem;
+  EFI_ACPI_AEST_SMMU_STRUCT              Smmu;
+  EFI_ACPI_AEST_VENDOR_DEFINED_STRUCT    Vendor;
+  EFI_ACPI_AEST_GIC_STRUCT               Gic;
+} EFI_ACPI_AEST_NODE_RESOURCE;
+
+typedef struct {
+  EFI_ACPI_AEST_NODE_RESOURCE     NodeResource;
+  EFI_ACPI_AEST_INTERFACE_STRUCT  NodeInterface;
+  EFI_ACPI_AEST_INTERRUPT_STRUCT  NodeInterrupt[MAX_INTERRUPT_TYPE];
+} EFI_ACPI_AEST_NODE_DATA;
+
+typedef struct {
+  EFI_ACPI_ARM_ERROR_SOURCE_TABLE Header;
+  EFI_ACPI_AEST_NODE_DATA     Node[MAX_NODES];
+} EFI_ACPI_ARM_ERROR_SOURCE_TABLE_DATA;
+
+STATIC EFI_ACPI_ARM_ERROR_SOURCE_TABLE_DATA Aest = {
+  {
+    ARM_ACPI_HEADER (
+      EFI_ACPI_6_3_ARM_ERROR_SOURCE_TABLE_SIGNATURE,
+      EFI_ACPI_ARM_ERROR_SOURCE_TABLE_DATA,
+      EFI_ACPI_ARM_ERROR_SOURCE_TABLE_REVISION
+    ),
+  },
+  {
+    {
+      {
+        {
+          {
+            EFI_ACPI_AEST_NODE_TYPE_PROCESSOR,         /* Type */
+            sizeof (EFI_ACPI_AEST_NODE_DATA),          /* Length */
+            0,                                         /* Reserved */
+            sizeof (EFI_ACPI_AEST_NODE_STRUCT),        /* Offset to Node data */
+            sizeof (EFI_ACPI_AEST_NODE_RESOURCE),      /* Offset to Node Interface */
+            (sizeof (EFI_ACPI_AEST_NODE_RESOURCE) +    /* Offset to Node Interrupt */
+             sizeof (EFI_ACPI_AEST_INTERFACE_STRUCT)),
+            1,                                         /* Interrupt array size */
+            0,                                         /* Timestamp */
+            0,                                         /* Reserved1 */
+            0,                                         /* Injection countdown rate */
+          },
+          // Processor Node Structure
+          0,                                             /* Processor ID */
+          EFI_ACPI_AEST_PROCESSOR_RESOURCE_TYPE_CACHE,   /* Resource Type */
+          0,                                             /* Reserved */
+          0,                                             /* Flags */
+          0,                                             /* Revision */
+          0,
+          {
+            // Cache Resource sub-structures
+            {
+              0,                                         /* Cache ID */
+              0,                                         /* Reserved */
+            },
+          },
+        },
+      },
+      {
+        EFI_ACPI_AEST_INTERFACE_TYPE_SR,         /* Interface type */
+        {0, 0, 0},                               /* Reserved */
+        0,                                       /* Flags */
+        0,                                       /* Base Address */
+        1,                                       /* Record Index */
+        1,                                       /* Num Error records */
+        BIT0,                                       /* Record implemented */
+        0,                                       /* Group status reporting */
+        0,                                       /* Addressing mode */
+      },
+      {
+        {
+          EFI_ACPI_AEST_INTERRUPT_TYPE_FAULT_HANDLING,     /* Interrupt type */
+          {0, 0},                                          /* Reserved */
+          EFI_ACPI_AEST_INTERRUPT_FLAG_TRIGGER_TYPE_LEVEL, /* Flags */
+          17,                                              /* GSIV */
+          0,                                               /* ID */
+          {0, 0, 0},                                       /* Reserved */
+        },
+      },
+    },
+  },
+};
+
+/*
+ * Reference the table being generated to prevent the optimizer from removing
+ * the data structure from the executable
+ */
+VOID* CONST ReferenceAcpiTable = &Aest;
