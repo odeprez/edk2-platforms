@@ -19,6 +19,7 @@
 #include <Protocol/AcpiTable.h>
 
 #include <PcieIortGenerator.h>
+#include <PcieMcfgTableGenerator.h>
 #include <SgiPlatform.h>
 
 extern CHAR8 pciessdttemplate_aml_code[];
@@ -358,7 +359,7 @@ PcieTableGeneratorEntryPoint (
       (SGI_PCIE_IO_BLOCK_LIST *)GET_GUID_HOB_DATA (PcieMmapTableHob);
     IoBlock = IoBlockList->IoBlocks;
     for (LoopIoBlock = 0; LoopIoBlock < IoBlockList->BlockCount;
-         LoopIoBlock++) {
+        LoopIoBlock++) {
       SGI_PCIE_DEVICE *RootPorts = IoBlock->RootPorts;
       for (LoopRootPort = 0; LoopRootPort < IoBlock->Count; LoopRootPort++) {
         if (RootPorts[LoopRootPort].Ecam.Size != 0) {
@@ -375,8 +376,13 @@ PcieTableGeneratorEntryPoint (
         }
       }
       IoBlock = (SGI_PCIE_IO_BLOCK *) ((UINT8 *)IoBlock +
-                  sizeof (SGI_PCIE_IO_BLOCK) +
-                  (sizeof (SGI_PCIE_DEVICE) * IoBlock->Count));
+          sizeof (SGI_PCIE_IO_BLOCK) +
+          (sizeof (SGI_PCIE_DEVICE) * IoBlock->Count));
+    }
+
+    Status = GenerateAndInstallMcfgTable (IoBlockList);
+    if (EFI_ERROR(Status)) {
+      return Status;
     }
 
     Status = GenerateAndInstallIortTable(IoBlockList);

@@ -15,6 +15,7 @@
 [Sources.common]
   PcieAcpiTableGeneratorLib.c
   PcieIortGenerator.c
+  PcieMcfgTableGenerator.c
   PcieSsdtTemplate.asl
 
 [Packages]
