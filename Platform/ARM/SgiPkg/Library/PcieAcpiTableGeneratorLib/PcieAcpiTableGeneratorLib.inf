@@ -14,6 +14,7 @@
 
 [Sources.common]
   PcieAcpiTableGeneratorLib.c
+  PcieIortGenerator.c
   PcieSsdtTemplate.asl
 
 [Packages]
@@ -35,6 +36,15 @@
   HobLib
   MemoryAllocationLib
   UefiDriverEntryPoint
+
+[FixedPcd]
+  gArmPlatformTokenSpaceGuid.PcdClusterCount
+  gArmPlatformTokenSpaceGuid.PcdCoreCount
+  gArmSgiTokenSpaceGuid.PcdSmmuDevIDBase
+  gArmSgiTokenSpaceGuid.PcdSmmuEventGsiv
+  gArmSgiTokenSpaceGuid.PcdSmmuGErrorGsiv
+  gArmSgiTokenSpaceGuid.PcdSmmuPriGsiv
+  gArmSgiTokenSpaceGuid.PcdSmmuSyncGsiv
 
 [Protocols]
   gEfiAcpiTableProtocolGuid          ## CONSUMES

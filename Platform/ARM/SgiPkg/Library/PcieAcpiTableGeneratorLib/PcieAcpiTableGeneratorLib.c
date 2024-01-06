@@ -18,6 +18,7 @@
 #include <Library/UefiBootServicesTableLib.h>
 #include <Protocol/AcpiTable.h>
 
+#include <PcieIortGenerator.h>
 #include <SgiPlatform.h>
 
 extern CHAR8 pciessdttemplate_aml_code[];
@@ -376,6 +377,11 @@ PcieTableGeneratorEntryPoint (
       IoBlock = (SGI_PCIE_IO_BLOCK *) ((UINT8 *)IoBlock +
                   sizeof (SGI_PCIE_IO_BLOCK) +
                   (sizeof (SGI_PCIE_DEVICE) * IoBlock->Count));
+    }
+
+    Status = GenerateAndInstallIortTable(IoBlockList);
+    if (EFI_ERROR(Status)) {
+      return Status;
     }
   }
 
