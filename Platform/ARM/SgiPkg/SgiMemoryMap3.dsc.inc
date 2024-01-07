@@ -61,6 +61,13 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingBase64|0x0601400000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareBase64|0x0602800000
 
+  # PCIe
+  gArmTokenSpaceGuid.PcdPciMmio32Base|0x60000000
+  gArmTokenSpaceGuid.PcdPciMmio32Size|0x10000000
+  gArmTokenSpaceGuid.PcdPciMmio64Base|0x4040000000
+  gArmTokenSpaceGuid.PcdPciMmio64Size|0x4040000000
+  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress|0x4000000000
+
   # Address bus width - 64GB address space
   gArmSgiTokenSpaceGuid.PcdMaxAddressBitsPerChip|36
 
