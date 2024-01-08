@@ -232,7 +232,7 @@
   #
   ## MM Communicate
 !if $(EDK2_SPMC_AT_EL2) == TRUE
-  gArmTokenSpaceGuid.PcdMmBufferBase|0xF8200000
+  gArmTokenSpaceGuid.PcdMmBufferBase|0xF3200000
 !else
   gArmTokenSpaceGuid.PcdMmBufferBase|0xFF600000
 !endif

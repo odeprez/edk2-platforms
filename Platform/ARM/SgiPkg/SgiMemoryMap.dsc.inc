@@ -75,5 +75,5 @@
   # System Memory (1GB - 16MB of Trusted DRAM at the top of the
   # 32bit address space)
   gArmTokenSpaceGuid.PcdSystemMemoryBase|0x80000000
-  gArmTokenSpaceGuid.PcdSystemMemorySize|0x7F000000
+  gArmTokenSpaceGuid.PcdSystemMemorySize|0x73000000
 

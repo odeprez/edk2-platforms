@@ -50,7 +50,7 @@
 
   # System Memory (2GB - 128MB of Trusted DRAM at the top of the 32bit address space)
   gArmTokenSpaceGuid.PcdSystemMemoryBase|0x80000000
-  gArmTokenSpaceGuid.PcdSystemMemorySize|0x78000000
+  gArmTokenSpaceGuid.PcdSystemMemorySize|0x73000000
 
   # SMMU
   gArmSgiTokenSpaceGuid.PcdSmmuBase|0x280000000
