@@ -19,6 +19,7 @@
   Fadt.aslc
   Gtdt.aslc
   RdFremontCfg1/Dsdt.asl
+  RdFremontCfg1/Einj.aslc
   RdFremontCfg1/Madt.aslc
   RdFremontCfg1/Pptt.aslc
   Spcr.aslc
@@ -74,3 +75,6 @@
 
   gEfiMdeModulePkgTokenSpaceGuid.PcdSerialRegisterBase
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
+
+  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase
+
