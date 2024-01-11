@@ -28,6 +28,9 @@
 #define GICD_BASE       (0x30000000 + 0x10000)
 #define GICD_SETSPI_NSR (0x0040)
 
+#define ALIGN_UP(num, align)    (((num) + ((align) - 1)) & ~((align) - 1))
+#define ALIGN_NEXT_64(x) ALIGN_UP(x,0x8)
+
 typedef struct {
   EFI_ACPI_6_4_EINJ_TRIGGER_ACTION_TABLE        TriggerErrorHeader;
   EFI_ACPI_6_4_EINJ_INJECTION_INSTRUCTION_ENTRY ErrorInstructionEntry[EINJ_TRIGGER_ERROR_ACTION_NO];
@@ -48,6 +51,13 @@ InitializeEinjTable (
   VOID
   )
 {
+  UINT64  StartAddr, AddrOffset,VendorOffset;
+  StartAddr = FixedPcdGet64 (PcdEinjSetErrorTypeAddress);
+
+  EFI_ACPI_6_4_SET_ERROR_TYPE_WITH_ADDRESS   *SetErrorTypeWithAddr =
+    (EFI_ACPI_6_4_SET_ERROR_TYPE_WITH_ADDRESS *)StartAddr;
+
+  EFI_ACPI_6_4_VENDOR_ERROR_TYPE_EXTENSION_STRUCTURE *VendorStructure;
   // Check if EINJ feature is enabled for the platform.
   if (!FeaturePcdGet (PcdEinjSupported)) {
     return;
@@ -60,7 +70,23 @@ InitializeEinjTable (
     0
     );
 
-  // Populate Trigger Action table.
+  /**
+    SET_ERROR_TYPE_WITH_ADDRESS Data Structure is of size 0x24.
+    VendorStructureOffset has the Offset value pointing to the start address
+    of Vendor Error Type Extension Structure.ALIGN_NEXT_64 will give next 64bit
+    aligned offset.
+  **/
+  VendorOffset = ALIGN_NEXT_64(sizeof(EFI_ACPI_6_4_VENDOR_ERROR_TYPE_EXTENSION_STRUCTURE));
+  AddrOffset = ALIGN_NEXT_64(sizeof(EFI_ACPI_6_4_SET_ERROR_TYPE_WITH_ADDRESS));
+
+  SetErrorTypeWithAddr->VendorStructureOffset = AddrOffset;
+  VendorStructure = (EFI_ACPI_6_4_VENDOR_ERROR_TYPE_EXTENSION_STRUCTURE *) (StartAddr + AddrOffset);
+
+  // Using an UINT32 variable at the end of Vendor error type extension structure
+  // as OEM defined structure.
+  VendorStructure->Length = VendorOffset + (sizeof (UINT32));
+
+  /*Trigger Action table for Firmware First Error injetion */
   EINJ_TRIGGER_ERROR_ACTION *mEinjTriggerErrorAction =
     (EINJ_TRIGGER_ERROR_ACTION*) FixedPcdGet64 (PcdEinjTriggerActionBase);
 

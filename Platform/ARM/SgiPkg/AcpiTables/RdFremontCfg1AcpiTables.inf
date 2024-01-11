@@ -78,4 +78,4 @@
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
 
   gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase
-
+  gArmSgiTokenSpaceGuid.PcdEinjSetErrorTypeAddress

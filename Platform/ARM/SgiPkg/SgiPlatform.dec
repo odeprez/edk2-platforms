@@ -133,5 +133,8 @@
   gArmSgiTokenSpaceGuid.PcdRemoteMemoryBase|0|UINT64|0x00001007
   gArmSgiTokenSpaceGuid.PcdRemoteMemorySize|0|UINT64|0x00001008
 
+  # EINJ Set error type with address
+  gArmSgiTokenSpaceGuid.PcdEinjSetErrorTypeAddress|0x00000000|UINT64|0x00001009
+
 [Ppis]
   gNtFwConfigDtInfoPpiGuid     = { 0x6f606eb3, 0x9123, 0x4e15, { 0xa8, 0x9b, 0x0f, 0xac, 0x66, 0xef, 0xd0, 0x17 } }

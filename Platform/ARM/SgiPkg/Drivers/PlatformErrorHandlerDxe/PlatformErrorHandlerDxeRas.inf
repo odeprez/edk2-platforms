@@ -45,6 +45,7 @@
   gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase
   gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize
   gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase
+  gArmSgiTokenSpaceGuid.PcdEinjSetErrorTypeAddress
 
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision
