@@ -54,7 +54,7 @@ STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
         32,
         0,
         EFI_ACPI_6_4_DWORD,
-        0xFF610000
+        0xFFE10000
       },   // Register region (GAR)
       PLATFORM_ERROR_TYPE_SUPPORTED,   // Supported Error Types by platform (Processor, Vendor)
       0xffffffffffffffff    // Register region Mask
@@ -71,7 +71,7 @@ STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
         64,
         0,
         EFI_ACPI_6_4_QWORD,
-        0xFF610000
+        0xFFE10000
       },
       0x0000000000000000,   // Value
       0xffffffffffffffff    // Register region Mask
@@ -88,7 +88,7 @@ STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
         64,
         0,
         EFI_ACPI_6_4_QWORD,
-        0xFF610100
+        0xFFE10100
       },
       0x0000000000000000,   // Value
       0xffffffffffffffff    // Register region Mask
@@ -105,7 +105,7 @@ STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
         64,
         0,
         EFI_ACPI_6_4_QWORD,
-        0xFF610250
+        0xFFE10250
       },
       0x0000000000000000,   // Value
       0xffffffffffffffff    // Register region Mask
@@ -122,7 +122,7 @@ STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
         64,
         0,
         EFI_ACPI_6_4_QWORD,
-        0xFF610400
+        0xFFE10400
       },
       0x0000000000000000,   // Value
       0xffffffffffffffff    // Register region Mask
@@ -139,7 +139,7 @@ STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
         64,
         0,
         EFI_ACPI_6_4_QWORD,
-        0xFF610200
+        0xFFE10200
       },
       FixedPcdGet64 (PcdEinjTriggerActionBase),   // Value
       0xffffffffffffffff    // Register region Mask

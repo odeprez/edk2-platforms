@@ -234,7 +234,7 @@
 !if $(EDK2_SPMC_AT_EL2) == TRUE
   gArmTokenSpaceGuid.PcdMmBufferBase|0xF3200000
 !else
-  gArmTokenSpaceGuid.PcdMmBufferBase|0xFF600000
+  gArmTokenSpaceGuid.PcdMmBufferBase|0xFFE00000
 !endif
   gArmTokenSpaceGuid.PcdMmBufferSize|0x10000
 
@@ -247,9 +247,9 @@
 
 !if $(EDK2_ERROR_INJ_EN) == TRUE
   ## Error Injection Instruction Memory Space
-  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0xFF610000
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0xFFE10000
   gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x10000
-  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0xFF611000
+  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0xFFE11000
 !endif
 
 !if $(EDK2_ENABLE_FFA) == FALSE

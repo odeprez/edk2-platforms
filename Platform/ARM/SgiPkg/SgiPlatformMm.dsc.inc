@@ -114,7 +114,7 @@
 
 !if $(EDK2_ENABLE_CPU_MM) == TRUE
   ## CPU
-  gCpuMmTokenSpaceGuid.PcdCpuErrorDataBase|0xFF621000
+  gCpuMmTokenSpaceGuid.PcdCpuErrorDataBase|0xFFE21000
   gCpuMmTokenSpaceGuid.PcdCpuErrorDataSize|0x400
   gCpuMmTokenSpaceGuid.PcdCpuErrorSdeiEventBase|805
   gCpuMmTokenSpaceGuid.PcdCpuErrorSourceCount|1
@@ -123,7 +123,7 @@
 
 !if $(EDK2_ENABLE_SRAM_MM) == TRUE
   ## Base Element Ram
-  gSramMmTokenSpaceGuid.PcdSramErrorDataBase|0xFF622000
+  gSramMmTokenSpaceGuid.PcdSramErrorDataBase|0xFFE22000
   gSramMmTokenSpaceGuid.PcdSramErrorDataSize|0x100
   gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase|804
   gSramMmTokenSpaceGuid.PcdSramErrorSourceCount|1
