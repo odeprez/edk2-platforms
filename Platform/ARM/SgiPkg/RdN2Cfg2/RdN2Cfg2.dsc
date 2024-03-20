@@ -48,6 +48,9 @@
   # Number of chips in the multi-chip package
   gArmSgiTokenSpaceGuid.PcdChipCount|4
 
+  # IO virtualization block
+  gArmSgiTokenSpaceGuid.PcdIoVirtBlkCountPerChip|2
+
   # Disables FFA
 !if $(EDK2_ENABLE_FFA) == FALSE
   gArmTokenSpaceGuid.PcdFfaEnable|0
