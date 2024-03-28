@@ -22,6 +22,8 @@
   BOARD_DXE_FV_COMPONENTS        = Platform/ARM/SgiPkg/RdN2Cfg3/RdN2Cfg3.fdf.inc
   BUILD_NUMBER                   = 1
 
+  DEFINE PCIE_ENABLE             = TRUE
+
 # include common definitions from SgiPlatform.dsc
 !include Platform/ARM/SgiPkg/SgiPlatform.dsc.inc
 !include Platform/ARM/SgiPkg/SgiMemoryMap2.dsc.inc
