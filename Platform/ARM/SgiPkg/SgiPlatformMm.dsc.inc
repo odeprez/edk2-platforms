@@ -112,25 +112,6 @@
   gEfiSecurityPkgTokenSpaceGuid.PcdUserPhysicalPresence|TRUE
 !endif
 
-!if $(EDK2_ENABLE_CPU_MM) == TRUE
-  ## CPU
-  gCpuMmTokenSpaceGuid.PcdCpuErrorDataBase|0xFFE21000
-  gCpuMmTokenSpaceGuid.PcdCpuErrorDataSize|0x400
-  gCpuMmTokenSpaceGuid.PcdCpuErrorSdeiEventBase|805
-  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceCount|1
-  gCpuMmTokenSpaceGuid.PcdCpuErrorSourceId|10
-!endif
-
-!if $(EDK2_ENABLE_SRAM_MM) == TRUE
-  ## Base Element Ram
-  gSramMmTokenSpaceGuid.PcdSramErrorDataBase|0xFFE22000
-  gSramMmTokenSpaceGuid.PcdSramErrorDataSize|0x100
-  gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase|804
-  gSramMmTokenSpaceGuid.PcdSramErrorSourceCount|1
-  gSramMmTokenSpaceGuid.PcdSramErrorSourceId|20
-  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase|0x2A4C0000
-  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase|0x2A4B0000
-!endif
 !if $(EDK2_ENABLE_FFA) == FALSE
   gArmTokenSpaceGuid.PcdFfaEnable|0
 !endif
