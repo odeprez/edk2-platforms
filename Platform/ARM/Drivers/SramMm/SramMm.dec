@@ -26,5 +26,5 @@
   gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase|0|UINT32|0x00000003
   gSramMmTokenSpaceGuid.PcdSramErrorSourceCount|1|UINT32|0x00000004
   gSramMmTokenSpaceGuid.PcdSramErrorSourceId|0|UINT16|0x00000005
-  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase|0|UINT64|0x00000006
-  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase|0|UINT64|0x00000007
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusCorrectedError|0|UINT32|0x00000008
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusUncorrectedError|0|UINT32|0x00000009

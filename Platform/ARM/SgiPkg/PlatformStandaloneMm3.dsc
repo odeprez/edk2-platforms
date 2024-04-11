@@ -68,13 +68,13 @@
 
 !if $(EDK2_ENABLE_SRAM_MM) == TRUE
   ## Base Element Ram
-  gSramMmTokenSpaceGuid.PcdSramErrorDataBase|0xFFE22000
+  gSramMmTokenSpaceGuid.PcdSramErrorDataBase|0xFB1F0000
   gSramMmTokenSpaceGuid.PcdSramErrorDataSize|0x100
   gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase|804
   gSramMmTokenSpaceGuid.PcdSramErrorSourceCount|1
   gSramMmTokenSpaceGuid.PcdSramErrorSourceId|20
-  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase|0x2A4C0000
-  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase|0x2A4B0000
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusCorrectedError|0x3000000
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusUncorrectedError|0x20000000
 !endif
   
   # Disables FFA

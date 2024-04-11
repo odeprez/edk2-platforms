@@ -20,52 +20,40 @@
   record of type 'Memory Error' and populates it with information collected
   from Base element ram error record registers.
 
-  @param[in] SramEccRecordBase  Sram S/NS Error Record Base register.
+  @param[in] SramErr  Sram error info data structure.
 **/
 STATIC
 VOID
 SramErrorHandler (
-  IN UINTN SramEccRecordBase
+  IN SRAM_ERR_INFO  *SramErr
   )
 {
   EFI_ACPI_6_4_GENERIC_ERROR_DATA_ENTRY_STRUCTURE *ErrBlockSectionDesc;
   EFI_ACPI_6_4_GENERIC_ERROR_STATUS_STRUCTURE     *ErrBlockStatusHeaderData;
   EFI_PLATFORM_MEMORY_ERROR_DATA                  MemorySectionInfo;
   EFI_GUID                                        SectionType;
-  UINT32                                          ClearStatus;
   VOID                                            *ErrBlockSectionData;
   UINTN                                           *ErrStatusBlock;
   UINT32                                          ErrStatus;
-  UINT32                                          ErrCode;
   UINT32                                          ErrAddr;
-  UINT32                                          MultibitError;
   BOOLEAN                                         CorrectedError;
   BOOLEAN                                         UncorrectableError;
-  BOOLEAN                                         MultibitCE;
-  BOOLEAN                                         MultibitUE;
 
   // Read Base element ram error record registers.
-  ErrStatus = MmioRead32 (SramEccRecordBase + ERRSTATUS);
-  ErrCode = MmioRead32 (SramEccRecordBase + ERRCODE);
-  ErrAddr = MmioRead32 (SramEccRecordBase + ERRADDR);
+  ErrStatus = SramErr->ErrStatus;
+  ErrAddr = SramErr->ErrAddr;
 
-  DEBUG ((DEBUG_INFO,"ErrStatus = 0x%x\n", ErrStatus));
-  DEBUG ((DEBUG_INFO,"ErrCode = 0x%x\n", ErrCode));
+  DEBUG ((DEBUG_INFO,"ErrStatus = 0x%x 0x%lx 0x%lx\n", ErrStatus));
   DEBUG ((DEBUG_INFO,"ErrAddr = 0x%x\n", ErrAddr));
 
   // Read the error type and count information.
-  if ((ErrStatus & ECC_ERR_STATUS_CE_BIT) != 0) {
+  CorrectedError = FALSE;
+  UncorrectableError = FALSE;
+  if ((ErrStatus & FixedPcdGet32 (PcdSramErrorErrStatusCorrectedError)) != 0) {
     CorrectedError = TRUE;
-  } else if ((ErrStatus & ECC_ERR_STATUS_UE_BIT) != 0) {
+  } else if ((ErrStatus &
+		FixedPcdGet32 (PcdSramErrorErrStatusUncorrectedError)) != 0) {
     UncorrectableError = TRUE;
-  }
-
-  if (ErrCode != 0) {
-    MultibitError =
-      ((ErrCode >> ECC_ERR_CODE_MBIT_TYPE_SHIFT) &
-       ECC_ERR_CODE_MBIT_TYPE_MASK);
-    MultibitCE = (MultibitError == ECC_ERR_CODE_MBIT_CE_ERR) ? 1: 0;
-    MultibitUE = (MultibitError == ECC_ERR_CODE_MBIT_UE_ERR) ? 1: 0;
   }
 
   // Read the faulting Memory Error Address Information.
@@ -75,9 +63,6 @@ SramErrorHandler (
       EFI_PLATFORM_MEMORY_PHY_ADDRESS_VALID;
     MemorySectionInfo.PhysicalAddressMask = 0xFFFFFFFFFFFF;
     MemorySectionInfo.PhysicalAddress = ErrAddr;
-
-  ClearStatus = MmioRead32 (SramEccRecordBase + ERRSTATUS);
-  MmioWrite32 ((SramEccRecordBase + ERRSTATUS), ClearStatus);
 
   // Locate Error Status Data memory space within the firmware reserved memory
   // and populate Cper record for Memory error.
@@ -94,8 +79,8 @@ SramErrorHandler (
     (UncorrectableError ? 1 : 0);
   ErrBlockStatusHeaderData->BlockStatus.CorrectableErrorValid =
     (CorrectedError ? 1 : 0);
-  ErrBlockStatusHeaderData->BlockStatus.MultipleUncorrectableErrors = MultibitUE;
-  ErrBlockStatusHeaderData->BlockStatus.MultipleCorrectableErrors = MultibitCE;
+  ErrBlockStatusHeaderData->BlockStatus.MultipleUncorrectableErrors = 0x0;
+  ErrBlockStatusHeaderData->BlockStatus.MultipleCorrectableErrors = 0x0;
   ErrBlockStatusHeaderData->BlockStatus.ErrorDataEntryCount = 0x1;
   ErrBlockStatusHeaderData->RawDataOffset =
     (sizeof (EFI_ACPI_6_4_GENERIC_ERROR_STATUS_STRUCTURE) +
@@ -165,7 +150,7 @@ SramErrorEventMmiHandler (
   IN OUT UINTN      *SramBufferSize OPTIONAL
   )
 {
-  BOOLEAN IsNonSecureSram;
+  SRAM_ERR_INFO  *SramErr;
 
   // Validate the SramBuffer parameter is not NULL.
   if (SramBuffer == NULL) {
@@ -173,21 +158,17 @@ SramErrorEventMmiHandler (
   }
 
   // Validate the SramBufferSize parameter.
-  if (*SramBufferSize < sizeof (BOOLEAN)) {
+  if (*SramBufferSize < sizeof (SRAM_ERR_INFO)) {
     return EFI_BAD_BUFFER_SIZE;
   }
 
-  // Secure or Non-Secure Base Element Ram that generated the event.
-  IsNonSecureSram = *(UINTN *)SramBuffer;
+  // Retrieve the Sram error records information.
+  SramErr = (SRAM_ERR_INFO *)SramBuffer;
 
-  if (IsNonSecureSram == TRUE) {
-    SramErrorHandler (FixedPcdGet64 (PcdSramNonSecureEccRecordBase));
-  } else {
-    SramErrorHandler (FixedPcdGet64 (PcdSramSecureEccRecordBase));
-  }
+  SramErrorHandler (SramErr);
 
   // Nothing to be returned.
-  *SramBufferSize = 0;
+  //*SramBufferSize = 0;
 
   return EFI_SUCCESS;
 }

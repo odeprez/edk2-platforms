@@ -20,29 +20,6 @@
 #include <Library/IoLib.h>
 #include <Protocol/MmHestErrorSourceProtocol.h>
 
-// Base Element Ram Error Record offsets.
-#define ERRSTATUS 0
-#define ERRCODE   8
-#define ERRADDR   12
-
-// Base Element Ram Ecc Error Status register bit fields.
-#define ECC_ERR_STATUS_CE_BIT BIT0
-#define ECC_ERR_STATUS_UE_BIT BIT1
-#define ECC_ERR_STATUS_OF_BIT BIT2
-
-// Base Element Ram Ecc Error Code register bit fields.
-#define ECC_ERR_CODE_MASK        (BIT2|BIT1|BIT0)
-#define ECC_ERR_CODE_NO_ERR      0x0
-#define ECC_ERR_CODE_RD_DATA_ERR 0x1
-#define ECC_ERR_CODE_WR_DATA_ERR 0x2
-#define ECC_ERR_CODE_POISON_ERR  0x3
-
-#define ECC_ERR_CODE_MBIT_TYPE_MASK  (BIT4|BIT3)
-#define ECC_ERR_CODE_MBIT_TYPE_SHIFT 3
-#define ECC_ERR_CODE_MBIT_NO_ERR     0x0
-#define ECC_ERR_CODE_MBIT_CE_ERR     0x1
-#define ECC_ERR_CODE_MBIT_UE_ERR     0x2
-
 //
 // Offsets within Firmware Reserved Memory (Error Status Block).
 // The firmware reserved memory is used by the driver to convey the error data
@@ -59,6 +36,14 @@
 #define ErrorStatusDataOffset     16
 #define ReadAckDataOffset         (ErrorStatusDataOffset + \
                                    sizeof (EFI_PLATFORM_MEMORY_ERROR_DATA))
+
+//
+// Data structure to communicate Sram Error Information.
+//
+typedef struct {
+  UINT32 ErrStatus;
+  UINT32 ErrAddr;
+} SRAM_ERR_INFO;
 
 /**
   Allow reporting of supported Base element ram error sources.

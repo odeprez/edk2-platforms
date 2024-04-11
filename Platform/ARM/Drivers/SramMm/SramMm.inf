@@ -43,8 +43,8 @@
   gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase
   gSramMmTokenSpaceGuid.PcdSramErrorSourceCount
   gSramMmTokenSpaceGuid.PcdSramErrorSourceId
-  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase
-  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusCorrectedError
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusUncorrectedError
 
 [Guids]
   gArmSramEventHandlerGuid

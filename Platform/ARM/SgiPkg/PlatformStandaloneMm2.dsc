@@ -73,8 +73,8 @@
   gSramMmTokenSpaceGuid.PcdSramErrorSdeiEventBase|804
   gSramMmTokenSpaceGuid.PcdSramErrorSourceCount|1
   gSramMmTokenSpaceGuid.PcdSramErrorSourceId|20
-  gSramMmTokenSpaceGuid.PcdSramNonSecureEccRecordBase|0x2A4C0000
-  gSramMmTokenSpaceGuid.PcdSramSecureEccRecordBase|0x2A4B0000
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusCorrectedError|1
+  gSramMmTokenSpaceGuid.PcdSramErrorErrStatusUncorrectedError|2
 !endif
   
   # Disables FFA
