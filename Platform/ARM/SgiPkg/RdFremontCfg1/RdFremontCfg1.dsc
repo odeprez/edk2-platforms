@@ -50,6 +50,12 @@
   gArmPlatformTokenSpaceGuid.PcdCoreCount|1
   gArmPlatformTokenSpaceGuid.PcdClusterCount|8
 
+  # Error Injection
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0xFB1DF000
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x10000
+  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0xFB1E0000
+  gArmSgiTokenSpaceGuid.PcdEinjSetErrorTypeAddress|0xFB1E1000
+#
 ################################################################################
 #
 # Components Section - list of all EDK II Modules needed by this Platform
