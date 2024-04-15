@@ -88,7 +88,7 @@ STATIC EFI_ACPI_6_4_ERROR_INJECTION_TABLE Einj = {
         64,
         0,
         EFI_ACPI_6_4_QWORD,
-        0xFFE10100
+        0xFFE12000
       },
       0x0000000000000000,   // Value
       0xffffffffffffffff    // Register region Mask
