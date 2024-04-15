@@ -50,6 +50,12 @@
   gArmPlatformTokenSpaceGuid.PcdCoreCount|1
   gArmPlatformTokenSpaceGuid.PcdClusterCount|8
 
+ # Error Injection
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0xFFE10000
+  gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x10000
+  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0xFFE11000
+  gArmSgiTokenSpaceGuid.PcdEinjSetErrorTypeAddress|0xFFE12000
+
   # Disables FFA
 !if $(EDK2_ENABLE_FFA) == FALSE
   gArmTokenSpaceGuid.PcdFfaEnable|0

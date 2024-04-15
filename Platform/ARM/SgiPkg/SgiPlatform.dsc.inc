@@ -249,13 +249,6 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId|0x204d5241 # ARM
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision|1
 
-!if $(EDK2_ERROR_INJ_EN) == TRUE
-  ## Error Injection Instruction Memory Space
-  gArmSgiTokenSpaceGuid.PcdEinjInstBufferBase|0xFFE10000
-  gArmSgiTokenSpaceGuid.PcdEinjInstBufferSize|0x10000
-  gArmSgiTokenSpaceGuid.PcdEinjTriggerActionBase|0xFFE11000
-!endif
-
 !if $(EDK2_ENABLE_FFA) == FALSE
   gArmTokenSpaceGuid.PcdFfaEnable|0
 !endif
