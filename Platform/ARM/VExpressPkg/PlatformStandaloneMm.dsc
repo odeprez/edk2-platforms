@@ -120,7 +120,7 @@
 #
 ################################################################################
 [PcdsFixedAtBuild]
-  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000008F
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x800000CF
   gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0xff
   gEfiMdePkgTokenSpaceGuid.PcdDebugClearMemoryValue|0xAF
 
